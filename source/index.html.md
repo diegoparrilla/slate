@@ -15,7 +15,9 @@ language_tabs: # must be one of https://git.io/vQNgJ
 toc_footers:
   - <a href='https://dashboard.apility.io/#/register'>Sign Up for a free account</a>
   - <a href='https://dashboard.apility.io/#/login'>Log in</a>
-  - <a href='https://apility.io'>Apility.io Homepage</a>
+  - <a href='https://apility.io'>Homepage</a>
+  - <a href='https://support.apility.io'>Docs & Support</a>
+  - <a href='https://search.apility.io'>Search Engine</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -26,7 +28,7 @@ search: true
 
 # What is Apility.io
 
-[Apility.io](https://apility.io) can be defined as a Look up as a Service for developers and product companies that want to know in realtime if their existing or potential users have been classified as 'abusers' by one or more of these lists.
+[Apility.io](https://apility.io) can be defined as Threat Intelligence SaaS for developers and product companies that want to know in realtime if their existing or potential users have been classified as 'abusers' by one or more of these lists.
 
 Automatic extraction processes extracts all the information in realtime, keeping the most up to date data available, saving yourself the hassle of extract and update regularly all these lists and the data.
 
@@ -70,14 +72,14 @@ Blacklists change on a daily basis. Please follow the links in the [main page](h
 There are multiple servers deployed worldwide in different Cloud Providers, scaling up and down automatically to handle peaks and valleys usage. If you don't care about using a non secure connection then the api can be reached at
 
 <aside class="notice">
-http://api.apility.io
+http://api.apility.net
 </aside>
 
 
 But if you care about non using a secured connection you can use SSL-terminated endpoints at:
 
 <aside class="notice">
-https://api.apility.io
+https://api.apility.net
 </aside>
 
 When you perform a request to this endpoint, thanks to the magic of DNS Anycast and latency-based resolution you will be served with the closest server available.
@@ -99,7 +101,7 @@ API is restricted by this API Key. Each subscription plan is limited to a number
 
 ```shell
 # With shell, you can just pass the correct header with each request
-curl "https://api.apility.io"
+curl "https://api.apility.net"
   -H "X-Auth-Token: UUID"
 ```
 
@@ -107,7 +109,7 @@ curl "https://api.apility.io"
 
 ```shell
 # With shell, you can just pass the correct header with each request
-curl "https://api.apility.io/?token=UUID"
+curl "https://api.apility.net/?token=UUID"
 ```
 
 > Make sure to replace `UUID` with your API key.
@@ -129,7 +131,7 @@ You must replace <code>UUID</code> with your own API key.
 > We will use curl from the command line.
 
 ```shell
-$ curl -I -X GET api.moocher.io/badip/1.2.3.4 -H "X-Auth-Token: UUID"
+$ curl -I -X GET api.apility.net/badip/1.2.3.4 -H "X-Auth-Token: UUID"
 ```
 
 > The response is:
@@ -150,7 +152,7 @@ SERVER: Python/3.5 aiohttp/0.21.6
 > We will use curl from the command line.
 
 ```shell
-$ curl -I -X GET api.moocher.io/badip/8.8.8.8 -H "X-Auth-Token: UUID"
+$ curl -I -X GET api.apility.net/badip/8.8.8.8 -H "X-Auth-Token: UUID"
 ```
 
 >The response is:
@@ -174,7 +176,7 @@ Developers just need to check the status code returned in the response. If code 
 > ___Example: Is domain gmail.com in any blacklist?___
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET https://api.apility.io/baddomain/gmail.com
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET https://api.apility.net/baddomain/gmail.com
 ```
 
 > The response is:
@@ -248,10 +250,10 @@ Developers will need to parse and analyze the JSON object returned in their appl
 
 ## JSONP support
 
-> ___Example: Is email marketing@moocher.io in any blacklist?___
+> ___Example: Is email marketing@apility.io in any blacklist?___
 
 ```shell
-$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/bademail/marketing@apility.io?callback=myfunction"
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/marketing@apility.io?callback=myfunction"
 ```
 
 >The response is:
@@ -270,7 +272,7 @@ myfunction(
 > ___Example: Is domain mailinator.com in any blacklist?___
 
 ```shell
-$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/baddomain/mailinator.com?callback=myfunction"
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com?callback=myfunction"
 ```
 
 > The response is:
@@ -306,7 +308,7 @@ Apility.io tracks multiple abuse blacklists and consolidates them in a single da
 ## Check if an IP belongs to any abusers' blacklist
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/badip/<IP>"
+$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
 ```
 
 >The response can be:
@@ -338,7 +340,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/badip/<IP>`
+`GET https://api.apility.net/badip/<IP>`
 
 ### Header Parameters
 
@@ -373,7 +375,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 ## Get all abusers' blacklist an IP belongs to
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/badip/<IP>"
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
 ```
 
 >The response can be:
@@ -398,7 +400,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/badip/<IP>`
+`GET https://api.apility.net/badip/<IP>`
 
 ### Header Parameters
 
@@ -449,7 +451,7 @@ By default if some of these tests success, a -1 score is added to the overall sc
 > Check a "clean" domain
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/baddomain/google.com"
+$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
 ```
 
 >The response:
@@ -466,7 +468,7 @@ Connection: keep-alive
 > Check a "bad" domain
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/baddomain/mailinator.com"
+$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
 ```
 
 ```shell
@@ -489,7 +491,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/baddomain/<DOMAIN>`
+`GET https://api.apility.net/baddomain/<DOMAIN>`
 
 ### Header Parameters
 
@@ -526,7 +528,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 > Get all information from a "clean" domain
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/baddomain/google.com"
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
 ```
 
 >The response can be:
@@ -574,7 +576,7 @@ $ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https
 > Get all information from a "bad" domain
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/baddomain/mailinator.com"
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
 ```
 
 >The response can be:
@@ -633,7 +635,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/baddomain/<DOMAIN>`
+`GET https://api.apility.net/baddomain/<DOMAIN>`
 
 ### Header Parameters
 
@@ -690,7 +692,7 @@ By default if some of these tests success, a -1 score is added to the overall sc
 > Check a "clean" email
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/bademail/support@apility.io"
+$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/support@apility.io"
 ```
 
 >The response:
@@ -707,7 +709,7 @@ Connection: keep-alive
 > Check a "bad" email
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/bademail/test@mailinator.com"
+$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
 ```
 
 ```shell
@@ -730,7 +732,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/bademail/<EMAIL>`
+`GET https://api.apility.net/bademail/<EMAIL>`
 
 ### Header Parameters
 
@@ -767,7 +769,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 > Get all information from a "clean" email
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/bademail/ceo@apility.io"
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/ceo@apility.io"
 ```
 
 >The response can be:
@@ -850,7 +852,7 @@ $ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https
 > Get all information from a "bad" email
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/bademail/test@mailinator.com"
+$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
 ```
 
 >The response can be:
@@ -936,7 +938,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/bademail/<EMAIL>`
+`GET https://api.apility.net/bademail/<EMAIL>`
 
 ### Header Parameters
 
@@ -995,7 +997,7 @@ This API request will always return a JSON structure with the information and a 
 > Get the geo location data of an IP:
 
 ```shell
-$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/geoip/9.9.9.9"
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip/9.9.9.9"
 ```
 
 >The response can be:
@@ -1030,7 +1032,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/geoip/<IP>`
+`GET https://api.apility.net/geoip/<IP>`
 
 ### Header Parameters
 
@@ -1084,7 +1086,7 @@ This API request will always return a JSON structure with the information and a 
 > Get the AS data of an IP:
 
 ```shell
-$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/as/ip/9.9.9.9"
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as/ip/9.9.9.9"
 ```
 
 >The response can be:
@@ -1108,7 +1110,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/as/ip/<IP>`
+`GET https://api.apility.net/as/ip/<IP>`
 
 ### Header Parameters
 
@@ -1149,7 +1151,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 > Get the AS data from its number:
 
 ```shell
-$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.io/as/num/19281"
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as/num/19281"
 ```
 
 >The response can be:
@@ -1173,7 +1175,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 
 ### HTTP Request
 
-`GET https://api.apility.io/as/num/<NUMBER>`
+`GET https://api.apility.net/as/num/<NUMBER>`
 
 ### Header Parameters
 
