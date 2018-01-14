@@ -176,7 +176,7 @@ Developers just need to check the status code returned in the response. If code 
 > ___Example: Is domain gmail.com in any blacklist?___
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET https://api.apility.net/baddomain/gmail.com
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET https://api.apility.net/baddomain/gmail.com
 ```
 
 > The response is:
@@ -244,7 +244,7 @@ This model follows the approach of the simple model, but allows to know the blac
 
 And if the answer is an _HTTP 404 (Not found)_ code means that the value cannot be found in the lists and therefore is a clean resource.
 
-To use Advanced Model, the developer needs to add to the header of the requests the __application/json__ response __Content-Type__:
+To use Advanced Model, the developer needs to add to the header of the requests the __application/json__ response __Accept__:
 
 Developers will need to parse and analyze the JSON object returned in their applications.
 
@@ -287,7 +287,7 @@ myfunction(
 
 JSONP (JSON with Padding or JSON-P) is a technique used by web developers to overcome the cross-domain restrictions imposed by browsers' same-origin policy that limits access to resources retrieved from origins other than the one the page was served by.  [Read more details in the wikipedia](https://en.wikipedia.org/wiki/JSONP)
 
-The developer does not  need to add to the header of the requests the __application/json__ response __Content-Type__, it will be added implicit when the parameter __callback__ is passed:
+The developer does not  need to add to the header of the requests the __application/json__ response __Accept__, it will be added implicit when the parameter __callback__ is passed:
 
 With JSONP requests some client side libraries can't manage HTTP codes properly, so the error responses are returned as JSON payload as follows:
 
@@ -375,7 +375,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 ## Get all abusers' blacklist an IP belongs to
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
 ```
 
 >The response can be:
@@ -407,7 +407,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -433,6 +433,76 @@ blacklists | Array with a list with the Identifiers of each blacklist.
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+## Get all abusers' blacklist a set of IP belong to (Bulk request)
+
+```shell
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip_batch/<IP1>,<IP2>...<IPn>"
+```
+
+>The response can be:
+
+```shell
+{
+    "badip_batch": [
+        {
+            "ip": "8.8.8.8",
+            "blacklists": []
+        },
+        {
+            "ip": "212.231.122.12",
+            "blacklists": []
+        },
+        {
+            "ip": "1.2.3.4",
+            "blacklists": ["STOPFORUMSPAM-180", "STOPFORUMSPAM-30", "STOPFORUMSPAM-7", "STOPFORUMSPAM-365", "STOPFORUMSPAM-90"]
+        }
+    ]
+}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the blacklists for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP:
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/badip_batch/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP1,IP2,...IPn | The comma separated list of IP to look up in the system.
+
+### Response
+
+The status code of the response can be a 200 if everything is ok, but it will also return the following JSON structure:
+
+Parameter | Description
+--------- | -----------
+response | Array with a list with the blacklists for each IP.
+
+
+<aside class="warning">
+The maximum number of IP per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
 </aside>
 
 # Domain Check
@@ -528,7 +598,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 > Get all information from a "clean" domain
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
 ```
 
 >The response can be:
@@ -576,7 +646,7 @@ $ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https
 > Get all information from a "bad" domain
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
 ```
 
 >The response can be:
@@ -642,7 +712,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -669,6 +739,211 @@ type      | String describing the response type: baddomain | badip | bademail
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+## Get all the scores of a set of domains (Bulk request)
+
+> Get all information from a set of domain
+
+```shell
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain_batch/google.com,moocher.io,apility.io,mailinator.com"
+```
+
+>The response can be:
+
+```shell
+{
+    "baddomain_batch": [
+        {
+            "domain": "apility.io",
+            "scoring": {
+                "score": 0,
+                "source_ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "127.0.0.1"
+                },
+                "domain": {
+                    "score": 0,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "alex.ns.cloudflare.com.",
+                        "pam.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "aspmx.l.google.com",
+                        "aspmx2.googlemail.com",
+                        "aspmx3.googlemail.com",
+                        "alt1.aspmx.l.google.com",
+                        "alt2.aspmx.l.google.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": []
+                },
+                "ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "104.31.76.225"
+                }
+            }
+        },
+        {
+            "domain": "moocher.io",
+            "scoring": {
+                "score": 0,
+                "source_ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "127.0.0.1"
+                },
+                "domain": {
+                    "score": 0,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "alex.ns.cloudflare.com.",
+                        "pam.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "aspmx.l.google.com",
+                        "alt2.aspmx.l.google.com",
+                        "alt4.aspmx.l.google.com",
+                        "alt1.aspmx.l.google.com",
+                        "alt3.aspmx.l.google.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": []
+                },
+                "ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "104.18.45.187"
+                }
+            }
+        },
+        {
+            "domain": "gmail.com",
+            "scoring": {
+                "score": -1,
+                "source_ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "127.0.0.1"
+                },
+                "domain": {
+                    "score": -1,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "ns4.google.com.",
+                        "ns1.google.com.",
+                        "ns2.google.com.",
+                        "ns3.google.com."
+                    ],
+                    "mx": [
+                        "alt3.gmail-smtp-in.l.google.com",
+                        "alt4.gmail-smtp-in.l.google.com",
+                        "alt2.gmail-smtp-in.l.google.com",
+                        "gmail-smtp-in.l.google.com",
+                        "alt1.gmail-smtp-in.l.google.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": [
+                        "FREEMAIL"
+                    ]
+                },
+                "ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "216.58.214.165"
+                }
+            }
+        },
+        {
+            "domain": "mailinator.com",
+            "scoring": {
+                "score": -1,
+                "source_ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "127.0.0.1"
+                },
+                "domain": {
+                    "score": -1,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "betty.ns.cloudflare.com.",
+                        "james.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "mail2.mailinator.com",
+                        "mail.mailinator.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": [
+                        "MARTENSON-DED",
+                        "DEA",
+                        "IVOLO-DED"
+                    ]
+                },
+                "ip": {
+                    "score": 0,
+                    "blacklist": [],
+                    "is_quarantined": false,
+                    "address": "104.25.198.31"
+                }
+            }
+        }
+    ]
+}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated domains in the QueryString. She will get the scoring and full JSON structure for each domain in the response. If the domain is not well formed it will return nothing for that domain, but will perform the lookup for the rest of the valid domains:
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/baddomain_batch/<DOMAIN1>,<DOMAIN2>,...,<DOMAINn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+DOMAIN1,DOMAIN2,...,DOMAINn    | The list of Domain names to lookup in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a list of JSON structures with the domain name and a '[Domain](#domain)' object.
+
+
+<aside class="warning">
+The maximum number of domains per bulk request is 25. The service will return a 400 error code (Bad Request) for arrays larger than 25.
 </aside>
 
 # Email Check
@@ -769,7 +1044,7 @@ You should double check that the endpoint of the URL is correct, since a wrong U
 > Get all information from a "clean" email
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/ceo@apility.io"
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/ceo@apility.io"
 ```
 
 >The response can be:
@@ -852,7 +1127,7 @@ $ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https
 > Get all information from a "bad" email
 
 ```shell
-$ curl -H "Content-Type: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
 ```
 
 >The response can be:
@@ -945,7 +1220,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -972,6 +1247,248 @@ type      | String describing the response type: baddomain | badip | bademail
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+
+## Get all the scores of a set of emails (Bulk requests)
+
+> Get all information from a set of emails
+
+```shell
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail_batch/test@moocher.io,test@apility.io,test@mailinator.com"
+```
+
+>The response can be:
+
+```shell
+{
+    "bademail_batch": [
+        {
+            "email": "test@moocher.io",
+            "scoring": {
+                "score": 0,
+                "smtp": {
+                    "score": 0,
+                    "exist_address": false,
+                    "exist_mx": true,
+                    "exist_catchall": false
+                },
+                "domain": {
+                    "score": 0,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "alex.ns.cloudflare.com.",
+                        "pam.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "aspmx.l.google.com",
+                        "alt2.aspmx.l.google.com",
+                        "alt4.aspmx.l.google.com",
+                        "alt1.aspmx.l.google.com",
+                        "alt3.aspmx.l.google.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": []
+                },
+                "freemail": {
+                    "score": 0,
+                    "is_freemail": false
+                },
+                "ip": {
+                    "score": 0,
+                    "address": "104.18.44.187",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "source_ip": {
+                    "score": 0,
+                    "address": "127.0.0.1",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "disposable": {
+                    "score": 0,
+                    "is_disposable": false
+                },
+                "email": {
+                    "score": 0,
+                    "blacklist": []
+                },
+                "address": {
+                    "score": 0,
+                    "is_role": false,
+                    "is_well_formed": true
+                }
+            }
+        },
+        {
+            "email": "test@apility.io",
+            "scoring": {
+                "score": 0,
+                "smtp": {
+                    "score": 0,
+                    "exist_address": false,
+                    "exist_mx": true,
+                    "exist_catchall": false
+                },
+                "domain": {
+                    "score": 0,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "alex.ns.cloudflare.com.",
+                        "pam.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "aspmx.l.google.com",
+                        "aspmx2.googlemail.com",
+                        "aspmx3.googlemail.com",
+                        "alt1.aspmx.l.google.com",
+                        "alt2.aspmx.l.google.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": []
+                },
+                "freemail": {
+                    "score": 0,
+                    "is_freemail": false
+                },
+                "ip": {
+                    "score": 0,
+                    "address": "104.31.77.225",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "source_ip": {
+                    "score": 0,
+                    "address": "127.0.0.1",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "disposable": {
+                    "score": 0,
+                    "is_disposable": false
+                },
+                "email": {
+                    "score": 0,
+                    "blacklist": []
+                },
+                "address": {
+                    "score": 0,
+                    "is_role": false,
+                    "is_well_formed": true
+                }
+            }
+        },
+        {
+            "email": "test@mailinator.com",
+            "scoring": {
+                "score": -2,
+                "smtp": {
+                    "score": 1,
+                    "exist_address": true,
+                    "exist_mx": true,
+                    "exist_catchall": false
+                },
+                "domain": {
+                    "score": -1,
+                    "blacklist_ns": [],
+                    "ns": [
+                        "betty.ns.cloudflare.com.",
+                        "james.ns.cloudflare.com."
+                    ],
+                    "mx": [
+                        "mail2.mailinator.com",
+                        "mail.mailinator.com"
+                    ],
+                    "blacklist_mx": [],
+                    "blacklist": [
+                        "MARTENSON-DED",
+                        "DEA",
+                        "IVOLO-DED"
+                    ]
+                },
+                "freemail": {
+                    "score": 0,
+                    "is_freemail": false
+                },
+                "ip": {
+                    "score": 0,
+                    "address": "104.25.198.31",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "source_ip": {
+                    "score": 0,
+                    "address": "127.0.0.1",
+                    "is_quarantined": false,
+                    "blacklist": []
+                },
+                "disposable": {
+                    "score": -1,
+                    "is_disposable": true
+                },
+                "email": {
+                    "score": -1,
+                    "blacklist": [
+                        "STOPFORUMSPAM-365",
+                        "STOPFORUMSPAM-180"
+                    ]
+                },
+                "address": {
+                    "score": 0,
+                    "is_role": false,
+                    "is_well_formed": true
+                }
+            }
+        }
+    ]
+}
+```
+
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated Emails in the QueryString. She will get the scoring and full JSON structure for each Email in the response. If the Email is not well formed it will return nothing for that email, but will perform the lookup for the rest of the valid emails:
+
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/bademail_batch/<EMAIL1>,<EMAIL2>,...,<EMAILn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+EMAIL1,EMAIL2,...,EMAILn     | The list of Emails to lookup in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a list of JSON structures with the email address and the '[Email](#email)' object.
+
+
+<aside class="warning">
+The maximum number of domains per bulk request is 10. The service will return a 400 error code (Bad Request) for arrays larger than 10.
 </aside>
 
 # Geo IP look up
@@ -1039,7 +1556,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -1065,6 +1582,144 @@ ip  | JSON structure containing the '[geoip](#geoip)' object.
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+## Get geo location of a set of IP (Bulk Request).
+
+> Get the geo location data of a set of IP:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip_batch212.231.122.12,8.8.8.8,9.9.9.9"
+```
+
+>The response can be:
+
+```shell
+{
+    "geoip_batch": [
+        {
+            "geoip": {
+                "longitude": -3.684,
+                "country": "ES",
+                "postal": "",
+                "region": "",
+                "city": "",
+                "as": {
+                    "country": "ES",
+                    "asn": "15704",
+                    "networks": [
+                        "31.222.80.0/20",
+                        "46.6.0.0/18",
+                        ...
+                        "213.195.96.0/19"
+                    ],
+                    "name": "AS15704",
+                    "ip": "212.231.122.12"
+                },
+                "continent": "EU",
+                "hostname": "",
+                "address": "212.231.122.12",
+                "latitude": 40.4172
+            },
+            "ip": "212.231.122.12"
+        },
+        {
+            "geoip": {
+                "longitude": -97.822,
+                "country": "US",
+                "postal": "",
+                "region": "",
+                "city": "",
+                "as": {
+                    "country": "US",
+                    "asn": "15169",
+                    "networks": [
+                        "8.8.4.0/24",
+                        "8.8.8.0/24",
+                        ...
+                        "216.252.222.0/24"
+                    ],
+                    "name": "GOOGLE - Google LLC",
+                    "ip": "8.8.8.8"
+                },
+                "continent": "NA",
+                "hostname": "google-public-dns-a.google.com",
+                "address": "8.8.8.8",
+                "latitude": 37.751
+            },
+            "ip": "8.8.8.8"
+        },
+        {
+            "geoip": {
+                "longitude": 2.3387000000000002,
+                "country": "FR",
+                "postal": "",
+                "region": "",
+                "city": "",
+                "as": {
+                    "networks": [
+                        "9.9.9.0/24",
+                        "149.112.112.0/24",
+                        "149.112.149.0/24"
+                    ],
+                    "asn": "19281",
+                    "country": "US",
+                    "name": "QUAD9-AS-1 - Quad9",
+                    "ip": "9.9.9.9"
+                },
+                "continent": "EU",
+                "hostname": "dns.quad9.net",
+                "address": "9.9.9.9",
+                "latitude": 48.8582
+            },
+            "ip": "9.9.9.9"
+        }
+    ]
+}```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the information inside a JSON structure for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP addresses:
+
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/geoip_batch/<IP1>,<IP2>,...,<IPn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP1,IP2,...,IPn        | The list  of IP to geo locate in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a JSON structure with the IP to geo locate and its '[geoip](#geoip)' object.
+
+
+<aside class="warning">
+The maximum number of IP to geo locate per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
 </aside>
 
 # Autonomous System look up
@@ -1117,7 +1772,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -1145,6 +1800,107 @@ as  | JSON structure containing the ''[as](#as)'' object.
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
 </aside>
 
+## Get the AS information from a set of IP (Bulk Request).
+
+> Get the AS data of a set of IP addresses:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as_batch/ip/212.231.122.12,8.8.8.8,9.9.9.9"
+```
+
+>The response can be:
+
+```shell
+{
+    "response": [
+        {
+            "as": {
+                "country": "ES",
+                "asn": "15704",
+                "networks": [
+                    "31.222.80.0/20",
+                    "46.6.0.0/18",
+                    ...
+                    "213.195.96.0/19"
+                ],
+                "name": "AS15704"
+            },
+            "ip": "212.231.122.12"
+        },
+        {
+            "as": {
+                "country": "US",
+                "asn": "15169",
+                "networks": [
+                    "8.8.4.0/24",
+                    "8.8.8.0/24",
+                    ...
+                    "216.252.222.0/24"
+                ],
+                "name": "GOOGLE - Google LLC"
+            },
+            "ip": "8.8.8.8"
+        },
+        {
+            "as": {
+                "networks": [
+                    "9.9.9.0/24",
+                    "149.112.112.0/24",
+                    "149.112.149.0/24"
+                ],
+                "asn": "19281",
+                "country": "US",
+                "name": "QUAD9-AS-1 - Quad9"
+            },
+            "ip": "9.9.9.9"
+        }
+    ]
+}}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the information inside a JSON structure for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP addresses:
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/as_batch/ip/<IP1>,<IP2>,...,<IPn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP1,IP2,...,IPn        | The list of IP addresses to lookup the AS in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a JSON structure with the IP adddress and its ''[as](#as)'' object.
+
+
+<aside class="warning">
+The maximum number of IP addresses to resolve per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+</aside>
 
 ## Get the AS information from its number.
 
@@ -1182,7 +1938,7 @@ You always have to pass the API key. You can pass it as a header parameter or a 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 X-Auth-Token | No | API Key of the owner.
-Content-Type | Yes | application/json
+Accept | Yes | application/json
 
 ### QueryString Parameters
 
@@ -1210,6 +1966,108 @@ as  | JSON structure containing the '[as](#as)' object.
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
 </aside>
 
+## Get the AS information from a set of AS numbers (Bulk Request).
+
+> Get the AS data from a set of AS numbers:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as_batch/num/15704,3352,15169"
+```
+
+>The response can be:
+
+```shell
+{
+    "response": [
+        {
+            "asn": "15704",
+            "as": {
+                "country": "ES",
+                "asn": "15704",
+                "networks": [
+                    "31.222.80.0/20",
+                    "46.6.0.0/18",
+                    ...
+                    "213.195.96.0/19"
+                ],
+                "name": "AS15704"
+            }
+        },
+        {
+            "asn": "3352",
+            "as": {
+                "country": "ES",
+                "asn": "3352",
+                "networks": [
+                    "2.136.0.0/16",
+                    "2.137.0.0/16",
+                    ...
+                    "217.127.0.0/16"
+                ],
+                "name": "TELEFONICA_DE_ESPANA"
+            }
+        },
+        {
+            "asn": "15169",
+            "as": {
+                "country": "US",
+                "asn": "15169",
+                "networks": [
+                    "8.8.4.0/24",
+                    "8.8.8.0/24",
+                    ...
+                    "216.252.222.0/24"
+                ],
+                "name": "GOOGLE - Google LLC"
+            }
+        }
+    ]
+}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated AS numbers in the QueryString. She will get the information inside a JSON structure for each AS number in the response. If the AS Number is not a correct number or the AS does not exist it will return nothing for it, but will perform the lookup for the rest of the valid AS numbers:
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/as_batch/num/<NUM1>,<NUM2>,...,<NUMn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+NUMBER    | The Number of the AS to look up in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a list of JSON structures with the AS number and its '[as](#as)' object.
+
+
+<aside class="warning">
+The maximum number of AS numbers to resolve per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+</aside>
 
 # Objects
 
