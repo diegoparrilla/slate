@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: Apility.io API Reference Guide
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
@@ -16,8 +16,9 @@ toc_footers:
   - <a href='https://dashboard.apility.io/#/register'>Sign Up for a free account</a>
   - <a href='https://dashboard.apility.io/#/login'>Log in</a>
   - <a href='https://apility.io'>Homepage</a>
-  - <a href='https://support.apility.io'>Docs & Support</a>
-  - <a href='https://search.apility.io'>Search Engine</a>
+  - <a href='https://apility.io/docs'>General Documentation</a>
+  - <a href='https://support.apility.io'>Support</a>
+  - <a href='https://apility.io/search'>Search Engine</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
