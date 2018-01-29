@@ -132,7 +132,7 @@ You must replace <code>UUID</code> with your own API key.
 > We will use curl from the command line.
 
 ```shell
-$ curl -I -X GET api.apility.net/badip/1.2.3.4 -H "X-Auth-Token: UUID"
+$ curl -i -X GET api.apility.net/badip/1.2.3.4 -H "X-Auth-Token: UUID"
 ```
 
 > The response is:
@@ -153,7 +153,7 @@ SERVER: Python/3.5 aiohttp/0.21.6
 > We will use curl from the command line.
 
 ```shell
-$ curl -I -X GET api.apility.net/badip/8.8.8.8 -H "X-Auth-Token: UUID"
+$ curl -i -X GET api.apility.net/badip/8.8.8.8 -H "X-Auth-Token: UUID"
 ```
 
 >The response is:
@@ -309,7 +309,7 @@ Apility.io tracks multiple abuse blacklists and consolidates them in a single da
 ## Check if an IP belongs to any abusers' blacklist
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
 ```
 
 >The response can be:
@@ -522,7 +522,7 @@ By default if some of these tests success, a -1 score is added to the overall sc
 > Check a "clean" domain
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/google.com"
 ```
 
 >The response:
@@ -539,7 +539,7 @@ Connection: keep-alive
 > Check a "bad" domain
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com"
 ```
 
 ```shell
@@ -968,7 +968,7 @@ By default if some of these tests success, a -1 score is added to the overall sc
 > Check a "clean" email
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/support@apility.io"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/support@apility.io"
 ```
 
 >The response:
@@ -985,7 +985,7 @@ Connection: keep-alive
 > Check a "bad" email
 
 ```shell
-$ curl -I -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com"
 ```
 
 ```shell
@@ -2069,6 +2069,1022 @@ response  | JSON structure containing a list of JSON structures with the AS numb
 <aside class="warning">
 The maximum number of AS numbers to resolve per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
 </aside>
+
+
+# Quarantined Objects
+
+[Apility.io](https://apility.io) adds every few weeks new lists from multiple sources with the intention of helping our users to keep away those who want to abuse the services of our clients.
+However, it may be the case that our customers want to create their own blacklists based on individual parameters or business logic. This is why a new capability has been implemented to create private exclusion lists based on user IP properties. The properties we can control are the following:
+
+* IP address [QUARANTINE-IP](https://apility.io/list?id=QUARANTINE-IP&type=badip)
+* Country [QUARANTINE-COUNTRY](https://apility.io/list?id=QUARANTINE-COUNTRY&type=badip)
+* Continent [QUARANTINE-CONTINENT](https://apility.io/list?id=QUARANTINE-CONTINENT&type=badip)
+* Autonomous System [QUARANTINE-AS](https://apility.io/list?id=QUARANTINE-AS&type=badip)
+
+
+For each type of object it's possible to perform four different actions:
+
+* add the object to the blacklist,
+* remove it,
+* check if the object is in the list or
+* get all the elements in the list.
+
+As part of the attributes of the object, the Time To Live of the object in the black list is the most important. The TTL or Time to Live is the number of seconds the object will be in the black list before expiring and disappearing. Hence, it's possible to temporaly ban an IP address or set of IP addreses based on some attributes: for example ban the IP address coming from a toxic Autonomous System. Due to this time-based ban this kind of blacklists are referred as QUARANTINED objects.
+
+Finally, to check if the IP belongs to any of these lists it's as simple as using the [IP Check](#ip-check) services of the API. If the IP matches some of the attributes, then the QUARANTINED blacklist will be shown just like the rest of the public blacklist.
+
+
+## Add an IP to the private QUARANTINE-IP backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"ip":<IP>,"ttl":<TTL>}' "https://api.apility.net/quarantine/ip"
+```
+
+>If the operation can be performed then the result is:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:01:31 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+200: OK
+```
+
+
+This endpoint add the IP address passed as argument in the body to the QUARANTINE-IP private blacklist. The TTL must be passed too and it permits two options:
+
+- If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
+- If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`POST https://api.apility.net/quarantine/ip`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+### JSON body
+
+The body must have a valid JSON object composed of two parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+ip | Yes | IP address to add to QUARANTINE-IP blacklist.
+ttl | Yes | Time to Live in seconds of the IP in the blacklist. Zero for never expiring.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP has been added succesfully to the QUARANTINE-IP blacklist. Any other error message means that the IP could not be added:
+
+* __HTTP/1.1 400 Bad Request__: The JSON object, IP address and/or the TTL are malformed, the IP address cannot be stored. Check the response text for more information about the error.
+
+
+## Add the Country of an IP address to the private QUARANTINE-COUNTRY backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"country":<COUNTRY_CODE>,"ttl":<TTL>}' "https://api.apility.net/quarantine/country"
+```
+
+>If the operation can be performed then the result is:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:01:31 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+200: OK
+```
+
+
+This endpoint add the country passed as argument in the body to the QUARANTINE-COUNTRY private blacklist. The TTL must be passed too and it permits two options:
+
+- If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
+- If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
+
+The service will automatically obtain the country of the IP using the Geo location service. If the country is in the QUARANTINE-COUNTRY blacklist, it will be reported in the [IP Check](#ip-check) services.
+
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`POST https://api.apility.net/quarantine/country`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+### JSON body
+
+The body must have a valid JSON object composed of two parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+country | Yes | Country ISO 3166-1 alfa-2 code to add to the QUARANTINE-COUNTRY blacklist.
+ttl | Yes | Time to Live in seconds of the Country in the blacklist. Zero for never expiring.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country has been added succesfully to the QUARANTINE-Country blacklist. Any other error message means that the Country could not be added:
+
+* __HTTP/1.1 400 Bad Request__: The JSON object, Country code and/or the TTL are malformed, the Country code cannot be stored. Check the response text for more information about the error.
+
+
+## Add the Continent of an IP address to the private QUARANTINE-CONTINENT backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"continent":<CONTINENT_CODE>,"ttl":<TTL>}' "https://api.apility.net/quarantine/continent"
+```
+
+>If the operation can be performed then the result is:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:01:31 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+200: OK
+```
+
+
+This endpoint add the continent passed as argument in the body to the QUARANTINE-CONTINENT private blacklist. The TTL must be passed too and it permits two options:
+
+- If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
+- If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
+
+The service will automatically obtain the continent of the IP using the Geo location service. If the continent is in the QUARANTINE-CONTINENT blacklist, it will be reported in the [IP Check](#ip-check) services.
+
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`POST https://api.apility.net/quarantine/continent`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+### JSON body
+
+The body must have a valid JSON object composed of two parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+continent | Yes | [Continent codes](https://datahub.io/core/continent-codes) to add to the QUARANTINE-CONTINENT blacklist.
+ttl | Yes | Time to Live in seconds of the Continent in the blacklist. Zero for never expiring.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent has been added succesfully to the QUARANTINE-CONTINENT blacklist. Any other error message means that the Continent could not be added:
+
+* __HTTP/1.1 400 Bad Request__: The JSON object, Continent code and/or the TTL are malformed, the Continent code cannot be stored. Check the response text for more information about the error.
+
+
+## Add the Autonomous System (AS) that owns the IP address to the private QUARANTINE-AS backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"asn":<AS_NUMBER>,"ttl":<TTL>}' "https://api.apility.net/quarantine/as"
+```
+
+>If the operation can be performed then the result is:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:01:31 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+200: OK
+```
+
+
+This endpoint adds the Autonomous System Number passed as argument in the body to the QUARANTINE-AS private blacklist. The TTL must be passed too and it permits two options:
+
+- If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
+- If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
+
+The service will automatically obtain the AS number of the IP using the AS resolution service. If the AS is in the QUARANTINE-AS blacklist, it will be reported in the [IP Check](#ip-check) services.
+
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`POST https://api.apility.net/quarantine/as`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+### JSON body
+
+The body must have a valid JSON object composed of two parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+asn | Yes | Autonomous System Number (ASN) to add to the QUARANTINE-AS blacklist.
+ttl | Yes | Time to Live in seconds of the AS in the blacklist. Zero for never expiring.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS has been added succesfully to the QUARANTINE-AS blacklist. Any other error message means that the AS could not be added:
+
+* __HTTP/1.1 400 Bad Request__: The JSON object, AS number and/or the TTL are malformed, the AS cannot be stored. Check the response text for more information about the error.
+
+
+## Check if the IP is in the private QUARANTINE-IP backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip/<IP>"
+```
+
+>If the IP is in the list:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:19:39 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+>If the IP is NOT the list:
+
+```shell
+HTTP/2 404
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:20:26 GMT
+content-type: text/plain; charset=utf-8
+content-length: 14
+
+```
+
+This endpoint check if the IP address passed as argument in the query string is in the QUARANTINE-IP private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+IP | Yes | IP address to check if it is in the QUARANTINE-IP
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP is in the QUARANTINE-IP blacklist. A HTTP/1.1 404 Not Found means that the IP address is not in the QUARANTINE-IP blacklist. Any other error message means that the IP could not be parsed:
+
+* __HTTP/1.1 400 Bad Request__: The IP address is malformed. Check the response text for more information about the error.
+
+
+## Check if the Country is in the private QUARANTINE-COUNTRY backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/country/<COUNTRY_CODE>"
+```
+
+>If the Country is in the list:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:19:39 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+>If the Country is NOT the list:
+
+```shell
+HTTP/2 404
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:20:26 GMT
+content-type: text/plain; charset=utf-8
+content-length: 14
+
+```
+
+This endpoint checks if the Country code passed as argument in the query string is in the QUARANTINE-COUNTRY private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/country/<COUNTRY_CODE>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+COUNTRY_CODE | Yes | Country ISO 3166-1 alfa-2 code to check if it is in the QUARANTINE-COUNTRY list.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country code is in the QUARANTINE-COUNTRY blacklist. A HTTP/1.1 404 Not Found means that the Conutry code is not in the QUARANTINE-COUNTRY blacklist. Any other error message means that the Country Code could not be parsed:
+
+* __HTTP/1.1 400 Bad Request__: The Country code is malformed. Check the response text for more information about the error.
+
+
+## Check if the Continent is in the private QUARANTINE-CONTINENT backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/continent/<CONTINENT_CODE>"
+```
+
+>If the Continent is in the list:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:19:39 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+>If the Continent is NOT in the list:
+
+```shell
+HTTP/2 404
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:20:26 GMT
+content-type: text/plain; charset=utf-8
+content-length: 14
+
+```
+
+This endpoint checks if the Continent code passed as argument in the query string is in the QUARANTINE-CONTINENT private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/continent/<CONTINENT_CODE>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+CONTINENT_CODE | Yes | [Continent codes](https://datahub.io/core/continent-codes) to check if it is in the QUARANTINE-CONTINENT list.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent code is in the QUARANTINE-CONTINENT blacklist. A HTTP/1.1 404 Not Found means that the Continent code is not in the QUARANTINE-CONTINENT blacklist. Any other error message means that the Continent Code could not be parsed:
+
+* __HTTP/1.1 400 Bad Request__: The Continent code is malformed. Check the response text for more information about the error.
+
+
+## Check if the AS is in the private QUARANTINE-AS backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as/<AS_NUM>"
+```
+
+>If the AS is in the list:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:19:39 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+>If the AS is NOT in the list:
+
+```shell
+HTTP/2 404
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:20:26 GMT
+content-type: text/plain; charset=utf-8
+content-length: 14
+
+```
+
+This endpoint checks if the AS Number passed as argument in the query string is in the QUARANTINE-AS private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/as/<AS_NUM>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+AS_NUM | Yes | Autonmous System Number (ASN) to check if it is in the QUARANTINE-AS list.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS is in the QUARANTINE-AS blacklist. A HTTP/1.1 404 Not Found means that the AS is not in the QUARANTINE-AS blacklist. Any other error message means that the AS number could not be parsed:
+
+* __HTTP/1.1 400 Bad Request__: The AS number (ASN) is malformed. Check the response text for more information about the error.
+
+
+## Get full list of IP addresses in the private QUARANTINE-IP backlist
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip"
+```
+
+>The response will always return a JSON object, even when there is no elements in the list:
+
+```shell
+{
+   "quarantined":[
+      {
+         "ip":"8.8.4.4",
+         "ttl":7185
+      },
+      {
+         "ip":"9.9.9.9",
+         "ttl":1717
+      },
+      {
+         "ip":"8.8.8.8",
+         "ttl":3571
+      }
+   ]
+}
+```
+
+This endpoint returns the full list of the IP addresses and the corresponding TTL in the QUARANTINE-IP private blacklist as a JSON object.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/ip`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+The JSON response is composed of:
+
+Parameter     | Description
+------------- | -----------
+quarantined | List containing the pair of IP addresses and TTL.
+
+
+## Get full list of Country codes in the private QUARANTINE-COUNTRY backlist
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/country"
+```
+
+>The response will always return a JSON object, even when there is no elements in the list:
+
+```shell
+{
+   "quarantined":[
+      {
+         "country":"ES",
+         "ttl":7182
+      },
+      {
+         "country":"EE",
+         "ttl":7171
+      },
+      {
+         "country":"US",
+         "ttl":7195
+      }
+   ]
+}
+
+```
+
+This endpoint returns the full list of the Country codes and the corresponding TTL in the QUARANTINE-COUNTRY private blacklist as a JSON object.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/country`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+The JSON response is composed of:
+
+Parameter     | Description
+------------- | -----------
+quarantined | List containing the pair of Country codes and TTL.
+
+
+## Get full list of Continent codes in the private QUARANTINE-CONTINENT backlist
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/continent"
+```
+
+>The response will always return a JSON object, even when there is no elements in the list:
+
+```shell
+{
+   "quarantined":[
+      {
+         "continent":"EU",
+         "ttl":7179
+      },
+      {
+         "continent":"AS",
+         "ttl":3592
+      }
+   ]
+}
+
+```
+
+This endpoint returns the full list of the Continent codes and the corresponding TTL in the QUARANTINE-CONTINENT private blacklist as a JSON object.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/continent`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+The JSON response is composed of:
+
+Parameter     | Description
+------------- | -----------
+quarantined | List containing the pair of [Continent codes](https://datahub.io/core/continent-codes) and TTL.
+
+
+## Get full list of AS in the private QUARANTINE-AS backlist
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as"
+```
+
+>The response will always return a JSON object, even when there is no elements in the list:
+
+```shell
+{
+   "quarantined":[
+      {
+         "asn":"3352",
+         "ttl":3559
+      },
+      {
+         "asn":"15169",
+         "ttl":7191
+      }
+   ]
+}
+```
+
+This endpoint returns the full list of the AS Numbers and the corresponding TTL in the QUARANTINE-AS private blacklist as a JSON object.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/as`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+The JSON response is composed of:
+
+Parameter     | Description
+------------- | -----------
+quarantined | List containing the pair of AS Numbers and TTL.
+
+
+
+
+## Delete an IP address if it is in the private QUARANTINE-IP backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/ip/<IP>"
+```
+
+>The response will always be HTTP 200 OK no matter if the IP to delete exists or not:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:45:14 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+This endpoint delete the IP address passed as argument in the query string if it exists in the QUARANTINE-IP private blacklist. This API call will delete the IP address no matter if it will expire or not.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`DELETE https://api.apility.net/quarantine/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+IP | Yes | IP address to remove from the QUARANTINE-IP blacklist
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+* __HTTP/1.1 400 Bad Request__: The IP address is malformed. Check the response text for more information about the error.
+
+
+## Delete a Country Code if it is in the private QUARANTINE-COUNTRY backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/country/<COUNTRY_CODE>"
+```
+
+>The response will always be HTTP 200 OK no matter if the Country code to delete exists or not:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:45:14 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+This endpoint delete the Country code passed as argument in the query string if it exists in the QUARANTINE-COUNTRY private blacklist. This API call will delete the Country code no matter if it will expire or not.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`DELETE https://api.apility.net/quarantine/country/<COUNTRY_CODE>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+COUNTRY_CODE | Yes | Country Code to remove from the QUARANTINE-COUNTRY blacklist
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+* __HTTP/1.1 400 Bad Request__: The Country code is malformed. Check the response text for more information about the error.
+
+
+
+## Delete a Continent Code if it is in the private QUARANTINE-CONTINENT backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/continent/<CONTINENT_CODE>"
+```
+
+>The response will always be HTTP 200 OK no matter if the Continent code to delete exists or not:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:45:14 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+This endpoint delete the Continent code passed as argument in the query string if it exists in the QUARANTINE-CONTINENT private blacklist. This API call will delete the Continent code no matter if it will expire or not.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`DELETE https://api.apility.net/quarantine/continent/<CONTINENT_CODE>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+CONTINENT_CODE | Yes | [Continent code](https://datahub.io/core/continent-codes) to remove from the QUARANTINE-CONTINENT blacklist
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+* __HTTP/1.1 400 Bad Request__: The Continent code is malformed. Check the response text for more information about the error.
+
+
+## Delete an AS if it is in the private QUARANTINE-AS backlist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/AS/<AS_NUM>"
+```
+
+>The response will always be HTTP 200 OK no matter if the AS to delete exists or not:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:45:14 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+This endpoint delete the AS passed as argument in the query string if it exists in the QUARANTINE-AS private blacklist. This API call will delete the AS no matter if it will expire or not.
+
+<aside class="success">
+This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`DELETE https://api.apility.net/quarantine/as/<AS_NUM>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+AS_NUM | Yes | AS Number to remove from the QUARANTINE-AS blacklist
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+* __HTTP/1.1 400 Bad Request__: The AS Number is malformed. Check the response text for more information about the error.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Objects
 
