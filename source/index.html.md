@@ -97,16 +97,14 @@ API is restricted by this API Key. Each subscription plan is [limited to a numbe
 
 There is also an ANONYMOUS PLAN. The platform applies this plan if a developer does not pass any API Token when doing a request. So you can test the API right way before signing up!
 
-<aside class="notice">
 Please read more details about [Plans, Pricing and limits by day and hour](https://apility.io/docs/step-4-plans-pricing/)
-</aside>
+
 
 ## The Administration Dashboard
 
 To enjoy the API and the different Apility.io services it is necessary for the user to register on our platform. Once registered, the user will have access to a 30-day Trial of the service that will allow you to know without any cost the benefits of our solution. If after these 30 days the user does not enter the method of payment, you will enjoy the service for free for an unlimited period of time but with some restrictions.
 
 By registering on the platform [you have access to the administration dashboard](https://dashboard.apility.io/#/login). This administration console allows you to manage and configure the different services to tailor them to the needs of each client.
-
 
 
 ## Authentication
