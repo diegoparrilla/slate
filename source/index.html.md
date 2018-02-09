@@ -1687,7 +1687,8 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip_batch212.23
             "ip": "9.9.9.9"
         }
     ]
-}```
+}
+```
 
 A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the information inside a JSON structure for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP addresses:
 
@@ -1867,7 +1868,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as_batch/ip/212.2
             "ip": "9.9.9.9"
         }
     ]
-}}
+}
 ```
 
 A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the information inside a JSON structure for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP addresses:
