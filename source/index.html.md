@@ -457,7 +457,7 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
 
 ```shell
 {
-    "badip_batch": [
+    "response": [
         {
             "ip": "8.8.8.8",
             "blacklists": []
@@ -765,7 +765,7 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
 
 ```shell
 {
-    "baddomain_batch": [
+    "response": [
         {
             "domain": "apility.io",
             "scoring": {
@@ -1274,7 +1274,7 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
 
 ```shell
 {
-    "bademail_batch": [
+    "response": [
         {
             "email": "test@moocher.io",
             "scoring": {
@@ -1608,7 +1608,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip_batch212.23
 
 ```shell
 {
-    "geoip_batch": [
+    "response": [
         {
             "geoip": {
                 "longitude": -3.684,
