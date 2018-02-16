@@ -1517,6 +1517,8 @@ This service returns the geo location of any IP with relevant information like:
 * Latitude and Longitude
 * Autonomous System
 * Reverse Hostname
+* Time zone
+* Geoname numbers
 
 This API request will always return a JSON structure with the information and a 200 HTTP code if the IP can be found in the database. If not, then it will return a 404 HTTP code as usual.
 
@@ -1533,23 +1535,55 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip/9.9.9.9"
 
 ```shell
 {
-   "ip":{
-      "longitude":2.3387000000000002,
-      "postal":"",
-      "hostname":"dns.quad9.net",
-      "as":{
-         "networks":"['9.9.9.0/24', '149.112.112.0/24', '149.112.149.0/24']",
-         "asn":"19281",
-         "name":"QUAD9-AS-1 - Quad9",
-         "country":"US"
-      },
-      "latitude":48.8582,
-      "country":"FR",
-      "region":"",
-      "address":"9.9.9.9",
-      "continent":"EU",
-      "city":""
-   }
+    "ip": {
+        "time_zone": "Europe/Paris",
+        "city": "",
+        "continent_geoname_id": 6255148,
+        "region": "",
+        "accuracy_radius": 1000,
+        "latitude": 48.8582,
+        "region_geoname_id": -1,
+        "region_names": {},
+        "postal": "",
+        "longitude": 2.3387000000000002,
+        "as": {
+            "networks": [
+                "9.9.9.0/24",
+                "149.112.112.0/24",
+                "149.112.149.0/24"
+            ],
+            "name": "QUAD9-AS-1 - Quad9",
+            "asn": "19281",
+            "country": "US"
+        },
+        "address": "9.9.9.9",
+        "continent": "EU",
+        "country_names": {
+            "en": "France",
+            "pt-BR": "França",
+            "fr": "France",
+            "ja": "フランス共和国",
+            "de": "Frankreich",
+            "zh-CN": "法国",
+            "es": "Francia",
+            "ru": "Франция"
+        },
+        "city_names": {},
+        "hostname": "",
+        "country_geoname_id": 3017382,
+        "country": "FR",
+        "continent_names": {
+            "en": "Europe",
+            "pt-BR": "Europa",
+            "fr": "Europe",
+            "ja": "ヨーロッパ",
+            "de": "Europa",
+            "zh-CN": "欧洲",
+            "es": "Europa",
+            "ru": "Европа"
+        },
+        "city_geoname_id": -1
+    }
 }
 ```
 
@@ -1610,81 +1644,165 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/geoip_batch212.23
 {
     "response": [
         {
+            "ip": "8.8.8.8",
             "geoip": {
-                "longitude": -3.684,
-                "country": "ES",
-                "postal": "",
-                "region": "",
+                "time_zone": "",
                 "city": "",
-                "as": {
-                    "country": "ES",
-                    "asn": "15704",
-                    "networks": [
-                        "31.222.80.0/20",
-                        "46.6.0.0/18",
-                        ...
-                        "213.195.96.0/19"
-                    ],
-                    "name": "AS15704",
-                    "ip": "212.231.122.12"
-                },
-                "continent": "EU",
-                "hostname": "",
-                "address": "212.231.122.12",
-                "latitude": 40.4172
-            },
-            "ip": "212.231.122.12"
-        },
-        {
-            "geoip": {
+                "continent_geoname_id": 6255149,
+                "region": "",
+                "accuracy_radius": 1000,
+                "latitude": 37.751,
+                "region_geoname_id": -1,
+                "region_names": {},
+                "postal": "",
                 "longitude": -97.822,
-                "country": "US",
-                "postal": "",
-                "region": "",
-                "city": "",
                 "as": {
-                    "country": "US",
-                    "asn": "15169",
                     "networks": [
                         "8.8.4.0/24",
                         "8.8.8.0/24",
                         ...
                         "216.252.222.0/24"
                     ],
+                    "ip": "8.8.8.8",
                     "name": "GOOGLE - Google LLC",
-                    "ip": "8.8.8.8"
+                    "asn": "15169",
+                    "country": "US"
                 },
-                "continent": "NA",
-                "hostname": "google-public-dns-a.google.com",
                 "address": "8.8.8.8",
-                "latitude": 37.751
-            },
-            "ip": "8.8.8.8"
+                "continent": "NA",
+                "country_names": {
+                    "en": "United States",
+                    "pt-BR": "Estados Unidos",
+                    "fr": "États-Unis",
+                    "ja": "アメリカ合衆国",
+                    "de": "USA",
+                    "zh-CN": "美国",
+                    "es": "Estados Unidos",
+                    "ru": "США"
+                },
+                "city_names": {},
+                "hostname": "",
+                "country_geoname_id": 6252001,
+                "country": "US",
+                "continent_names": {
+                    "en": "North America",
+                    "pt-BR": "América do Norte",
+                    "fr": "Amérique du Nord",
+                    "ja": "北アメリカ",
+                    "de": "Nordamerika",
+                    "zh-CN": "北美洲",
+                    "es": "Norteamérica",
+                    "ru": "Северная Америка"
+                },
+                "city_geoname_id": -1
+            }
         },
         {
+            "ip": "212.231.122.12",
             "geoip": {
-                "longitude": 2.3387000000000002,
-                "country": "FR",
-                "postal": "",
-                "region": "",
+                "time_zone": "",
                 "city": "",
+                "continent_geoname_id": 6255148,
+                "region": "",
+                "accuracy_radius": 500,
+                "latitude": 40.4172,
+                "region_geoname_id": -1,
+                "region_names": {},
+                "postal": "",
+                "longitude": -3.684,
+                "as": {
+                    "networks": [
+                        "31.222.80.0/20",
+                        "46.6.0.0/18",
+                        ...
+                        "213.195.96.0/19"
+                    ],
+                    "ip": "212.231.122.12",
+                    "name": "AS15704",
+                    "asn": "15704",
+                    "country": "ES"
+                },
+                "address": "212.231.122.12",
+                "continent": "EU",
+                "country_names": {
+                    "en": "Spain",
+                    "pt-BR": "Espanha",
+                    "fr": "Espagne",
+                    "ja": "スペイン",
+                    "de": "Spanien",
+                    "zh-CN": "西班牙",
+                    "es": "España",
+                    "ru": "Испания"
+                },
+                "city_names": {},
+                "hostname": "",
+                "country_geoname_id": 2510769,
+                "country": "ES",
+                "continent_names": {
+                    "en": "Europe",
+                    "pt-BR": "Europa",
+                    "fr": "Europe",
+                    "ja": "ヨーロッパ",
+                    "de": "Europa",
+                    "zh-CN": "欧洲",
+                    "es": "Europa",
+                    "ru": "Европа"
+                },
+                "city_geoname_id": -1
+            }
+        },
+        {
+            "ip": "9.9.9.9",
+            "geoip": {
+                "time_zone": "Europe/Paris",
+                "city": "",
+                "continent_geoname_id": 6255148,
+                "region": "",
+                "accuracy_radius": 1000,
+                "latitude": 48.8582,
+                "region_geoname_id": -1,
+                "region_names": {},
+                "postal": "",
+                "longitude": 2.3387000000000002,
                 "as": {
                     "networks": [
                         "9.9.9.0/24",
                         "149.112.112.0/24",
                         "149.112.149.0/24"
                     ],
-                    "asn": "19281",
-                    "country": "US",
+                    "ip": "9.9.9.9",
                     "name": "QUAD9-AS-1 - Quad9",
-                    "ip": "9.9.9.9"
+                    "asn": "19281",
+                    "country": "US"
                 },
-                "continent": "EU",
-                "hostname": "dns.quad9.net",
                 "address": "9.9.9.9",
-                "latitude": 48.8582
-            },
-            "ip": "9.9.9.9"
+                "continent": "EU",
+                "country_names": {
+                    "en": "France",
+                    "pt-BR": "França",
+                    "fr": "France",
+                    "ja": "フランス共和国",
+                    "de": "Frankreich",
+                    "zh-CN": "法国",
+                    "es": "Francia",
+                    "ru": "Франция"
+                },
+                "city_names": {},
+                "hostname": "",
+                "country_geoname_id": 3017382,
+                "country": "FR",
+                "continent_names": {
+                    "en": "Europe",
+                    "pt-BR": "Europa",
+                    "fr": "Europe",
+                    "ja": "ヨーロッパ",
+                    "de": "Europa",
+                    "zh-CN": "欧洲",
+                    "es": "Europa",
+                    "ru": "Европа"
+                },
+                "city_geoname_id": -1
+            }
         }
     ]
 }
@@ -3137,11 +3255,21 @@ longitude | Longitude where the IP has been found
 latitude | Latitude where the IP has been found
 hostname | Name of the host resolved from the IP
 address | IPv4 or IPv6 address of the request
-continent | 2 letter code of the continent
-country | ISO 3166-1 Country code
-region | Name of the region
-city | Name of the city
+continent | 2 letter code of the continent.
+country | ISO 3166-1 Country code.
+region | Name of the region, by default the english translation in 'region_names'.
+city | Name of the city, by default the english translation in 'city_names'.
 postal | Postal code or Zip code
+time_zone | Time zone of the location
+accuracy_radius | The approximate radius in kilometers around the latitude and longitude for the geographical entity. -1 if unknown.
+continent_geoname_id | Id of the continent in the [geonames.org](http://www.geonames.org) database. -1 if the continent cannot be geolocated.
+country_geoname_id | Id of the country in the [geonames.org](http://www.geonames.org) database. -1 if the country cannot be geolocated.
+region_geoname_id | Id of the region in the [geonames.org](http://www.geonames.org) database. -1 if the region cannot be geolocated.
+city_geoname_id | Id of the city in the [geonames.org](http://www.geonames.org) database. -1 if the city cannot be geolocated.
+continent_names | JSON structure containing the different names of the continent in different languages. Languages are in ISO 639-1. Empty if continent cannot be geolocated.
+country_names | JSON structure containing the different names of the country in different languages. Languages are in ISO 639-1. Empty if country cannot be geolocated.
+region_names | JSON structure containing the different names of the region in different languages. Languages are in ISO 639-1. Empty if region cannot be geolocated.
+city_names | JSON structure containing the different names of the city in different languages. Languages are in ISO 639-1. Empty if city cannot be geolocated.
 as | JSON structure containing the '[as](#as)' object.
 
 ## as
