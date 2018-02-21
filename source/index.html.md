@@ -514,7 +514,7 @@ response | Array with a list with the blacklists for each IP.
 
 
 <aside class="warning">
-The maximum number of IP per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+The maximum number of IP per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
 # Domain Check
@@ -955,7 +955,7 @@ response  | JSON structure containing a list of JSON structures with the domain 
 
 
 <aside class="warning">
-The maximum number of domains per bulk request is 25. The service will return a 400 error code (Bad Request) for arrays larger than 25.
+The maximum number of domains per bulk request is 250. The service will return a 400 error code (Bad Request) for arrays larger than 250.
 </aside>
 
 # Email Check
@@ -1500,7 +1500,7 @@ response  | JSON structure containing a list of JSON structures with the email a
 
 
 <aside class="warning">
-The maximum number of domains per bulk request is 10. The service will return a 400 error code (Bad Request) for arrays larger than 10.
+The maximum number of domains per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
 </aside>
 
 # Geo IP look up
@@ -1850,7 +1850,7 @@ response  | JSON structure containing a JSON structure with the IP to geo locate
 
 
 <aside class="warning">
-The maximum number of IP to geo locate per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+The maximum number of IP to geo locate per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
 # Autonomous System look up
@@ -2030,7 +2030,7 @@ response  | JSON structure containing a JSON structure with the IP adddress and 
 
 
 <aside class="warning">
-The maximum number of IP addresses to resolve per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+The maximum number of IP addresses to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
 ## Get the AS information from its number.
@@ -2197,7 +2197,7 @@ response  | JSON structure containing a list of JSON structures with the AS numb
 
 
 <aside class="warning">
-The maximum number of AS numbers to resolve per bulk request is 100. The service will return a 400 error code (Bad Request) for arrays larger than 100.
+The maximum number of AS numbers to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
 
