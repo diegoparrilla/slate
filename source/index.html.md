@@ -41,7 +41,7 @@ This example API documentation page was created with [Slate](https://github.com/
 
 Apility.io offers an extremely simple and minimalistic REST style API to access in realtime to these lists and do the following simple question about the resource?
 
-__Is this IP, domain or email stored in any blacklist?__
+__Is this IP, domain or email stored in any blocklist?__
 
 The answers to this question can be:
 
@@ -64,9 +64,9 @@ There are several different type of resources that will grow in time:
 * __IP Geolocation__: For Geolocation activities, access to a Geolocation Rest API based in MaxMind GeoIP Lite database is also available.
 * __Autonomous Systems__: Get the Autonomous System and network by the IP or the number.
 
-## What blacklists are in use?
+## What blocklists are in use?
 
-Blacklists change on a daily basis. Please follow the links in the [main page](https://apility.io/blacklists).
+Blocklists change on a daily basis. Please follow the links in the [main page](https://apility.io/blocklists).
 
 ## Where are the API endpoints servers deployed?
 
@@ -138,7 +138,7 @@ You must replace <code>UUID</code> with your own API key.
 
 ## Simple Model: GET requests and HTTP response codes
 
-> ___Example: Is IP 1.2.3.4 in any blacklist?___
+> ___Example: Is IP 1.2.3.4 in any blocklist?___
 
 > We will use curl from the command line.
 
@@ -156,10 +156,10 @@ DATE: Tue, 21 Jun 2016 08:52:14 GMT
 SERVER: Python/3.5 aiohttp/0.21.6
 ```
 
-> __The HTTP 200 (OK) code means the IP 1.2.3.4 belongs to any blacklist.__
+> __The HTTP 200 (OK) code means the IP 1.2.3.4 belongs to any blocklist.__
 
 
-> ___Example: Is IP 8.8.8.8 in any blacklist?___
+> ___Example: Is IP 8.8.8.8 in any blocklist?___
 
 > We will use curl from the command line.
 
@@ -177,7 +177,7 @@ DATE: Sun, 26 Jun 2016 15:41:40 GMT
 SERVER: Python/3.5 aiohttp/0.21.6
 ```
 
-> __The HTTP 404 (Not Found) code means the IP 8.8.8.8 does not belong to any blacklist (8.8.8.8 is a public DNS by Google, which makes a lot of sense to not be in any blacklist of abusers...)__
+> __The HTTP 404 (Not Found) code means the IP 8.8.8.8 does not belong to any blocklist (8.8.8.8 is a public DNS by Google, which makes a lot of sense to not be in any blocklist of abusers...)__
 
 The easiest way to use the API get advantage of GET requests and responses with standard HTTP codes. In this model, a _HTTP 200 (OK)_ response code means that the value passed in the request belongs to any lists and therefore is a bad resource. If the answer is a _HTTP 404 (Not found)_ code that means it does not belong to any lists and therefore is a clean resource.
 
@@ -185,7 +185,7 @@ Developers just need to check the status code returned in the response. If code 
 
 ## Advanced Model: GET requests, JSON and HTTP response codes
 
-> ___Example: Is domain gmail.com in any blacklist?___
+> ___Example: Is domain gmail.com in any blocklist?___
 
 ```shell
 $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET https://api.apility.net/baddomain/gmail.com
@@ -250,9 +250,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET https://api.
 }
 ```
 
-> Gmail is in the blackist FREEMAIL. It contains a catalog of Free Email services worldwide. You can remove FREEMAIL from the blacklists from the dashboard if you don't want to restrict access to Free Email services.
+> Gmail is in the blackist FREEMAIL. It contains a catalog of Free Email services worldwide. You can remove FREEMAIL from the blocklists from the dashboard if you don't want to restrict access to Free Email services.
 
-This model follows the approach of the simple model, but allows to know the blacklists the requested resource is. This model still follow that if the response is an _HTTP code 200 (OK)_ means that the value passed in the request is part of the lists and therefore is a bad resource. But this answer returns a set of list names the resource belongs to.
+This model follows the approach of the simple model, but allows to know the blocklists the requested resource is. This model still follow that if the response is an _HTTP code 200 (OK)_ means that the value passed in the request is part of the lists and therefore is a bad resource. But this answer returns a set of list names the resource belongs to.
 
 And if the answer is an _HTTP 404 (Not found)_ code means that the value cannot be found in the lists and therefore is a clean resource.
 
@@ -262,7 +262,7 @@ Developers will need to parse and analyze the JSON object returned in their appl
 
 ## JSONP support
 
-> ___Example: Is email marketing@apility.io in any blacklist?___
+> ___Example: Is email marketing@apility.io in any blocklist?___
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/marketing@apility.io?callback=myfunction"
@@ -279,9 +279,9 @@ myfunction(
 });
 ```
 
-> The marketing email from Apility.io is not in any blacklist, and the error comes as a JSON payload inside a function call as JSONP needs.
+> The marketing email from Apility.io is not in any blocklist, and the error comes as a JSON payload inside a function call as JSONP needs.
 
-> ___Example: Is domain mailinator.com in any blacklist?___
+> ___Example: Is domain mailinator.com in any blocklist?___
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com?callback=myfunction"
@@ -315,9 +315,9 @@ Paid plans can restrict the source IP of the requests to prevent unauthorized us
 
 # IP Check
 
-Apility.io tracks multiple abuse blacklists and consolidates them in a single database you can look up with our minimalist API.
+Apility.io tracks multiple abuse blocklists and consolidates them in a single database you can look up with our minimalist API.
 
-## Check if an IP belongs to any abusers' blacklist
+## Check if an IP belongs to any abusers' blocklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
@@ -377,14 +377,14 @@ IP | The IP to look up in the system.
 
 The response can be a 200 or 404 HTTP code if everything is ok:
 
-* __HTTP/1.1 200 OK__ : 200 (OK) means that the IPV4 is in any blacklist and then it is a __bad__ IP
+* __HTTP/1.1 200 OK__ : 200 (OK) means that the IPV4 is in any blocklist and then it is a __bad__ IP
 * __HTTP/1.1 404 Not Found__: and 404 (OK) means that the IPV4 is a clean IP.
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
 </aside>
 
-## Get all abusers' blacklist an IP belongs to
+## Get all abusers' blocklist an IP belongs to
 
 ```shell
 $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/badip/<IP>"
@@ -404,7 +404,7 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
 Resource Not found
 ```
 
-If a developer wants to know what blacklists contain the IP passed as argument, she needs to pass to curl an extra argument with information about the Content type as __application/json__:
+If a developer wants to know what blocklists contain the IP passed as argument, she needs to pass to curl an extra argument with information about the Content type as __application/json__:
 
 <aside class="success">
 You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -440,7 +440,7 @@ The status code of the response can be a 200 or 404 HTTP code if everything is o
 
 Parameter | Description
 --------- | -----------
-blacklists | Array with a list with the Identifiers of each blacklist.
+blacklists | Array with a list with the Identifiers of each blocklist.
 
 
 <aside class="warning">
@@ -474,7 +474,7 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
 }
 ```
 
-A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the blacklists for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP:
+A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the blocklists for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP:
 
 <aside class="success">
 You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -521,10 +521,10 @@ The maximum number of IP per bulk request is 1000. The service will return a 400
 
 Domain check implements an algorithm that assigns a score to the domain based on several checks done by the system:
 
-* Is the domain in any of the domain blacklists?
-* Is the domain MX records in any of the domain blacklists?
-* Is the domain NS records in any of the domain blacklists?
-* Is the IP of domain in any of the IP blacklists?
+* Is the domain in any of the domain blocklists?
+* Is the domain MX records in any of the domain blocklists?
+* Is the domain NS records in any of the domain blocklists?
+* Is the IP of domain in any of the IP blocklists?
 
 By default if some of these tests success, a -1 score is added to the overall score of the domain. So an overall score of -3 means the chances of being a bad domain are higher than -1.
 
@@ -962,11 +962,11 @@ The maximum number of domains per bulk request is 250. The service will return a
 
 Email check implements an algorithm as a superset of the used for the domain analysis that assigns a score to the email based on several checks done by the system:
 
-* Is the domain in any of the domain blacklists?
-* Is the domain MX records in any of the domain blacklists?
-* Is the domain NS records in any of the domain blacklists?
-* Is the IP of domain in any of the IP blacklists?
-* Is the Email in any of the Email blacklists?
+* Is the domain in any of the domain blocklists?
+* Is the domain MX records in any of the domain blocklists?
+* Is the domain NS records in any of the domain blocklists?
+* Is the IP of domain in any of the IP blocklists?
+* Is the Email in any of the Email blocklists?
 * Is the domain in a Free Email Provider list?
 * Is the domain in a Disposable Email Address Provider list?
 * Does the email inbox really exists?
@@ -1505,7 +1505,7 @@ The maximum number of domains per bulk request is 100. The service will return a
 
 # Geo IP look up
 
-The Geo IP service cannot be classified as __blacklists__ as the lists above, but are really helpful to analyze an IP and create a profile of your users. Just like blacklists they can be accessed with our simple API and they are rate limited the same way. So if you get 429 error (Too many requests) please consider upgrading to a paid plan.
+The Geo IP service cannot be classified as __blocklists__ as the lists above, but are really helpful to analyze an IP and create a profile of your users. Just like blocklists they can be accessed with our simple API and they are rate limited the same way. So if you get 429 error (Too many requests) please consider upgrading to a paid plan.
 
 This service returns the geo location of any IP with relevant information like:
 
@@ -1855,7 +1855,7 @@ The maximum number of IP to geo locate per bulk request is 1000. The service wil
 
 # Autonomous System look up
 
-The Autonomous System look up services cannot be classified as __blacklists__ too, but are really helpful to deep analyze an IP and create a profile of your users. Just like blacklists they can be accessed with our simple API and they are rate limited the same way. So if you get 429 error (Too many requests) please consider upgrading to a paid plan.
+The Autonomous System look up services cannot be classified as __blocklists__ too, but are really helpful to deep analyze an IP and create a profile of your users. Just like blocklists they can be accessed with our simple API and they are rate limited the same way. So if you get 429 error (Too many requests) please consider upgrading to a paid plan.
 
 This service returns the Autonomous System information of an IP or ASN:
 
@@ -2204,7 +2204,7 @@ The maximum number of AS numbers to resolve per bulk request is 1000. The servic
 # Quarantined Objects
 
 [Apility.io](https://apility.io) adds every few weeks new lists from multiple sources with the intention of helping our users to keep away those who want to abuse the services of our clients.
-However, it may be the case that our customers want to create their own blacklists based on individual parameters or business logic. This is why a new capability has been implemented to create private exclusion lists based on user IP properties. The properties we can control are the following:
+However, it may be the case that our customers want to create their own blocklists based on individual parameters or business logic. This is why a new capability has been implemented to create private exclusion lists based on user IP properties. The properties we can control are the following:
 
 * IP address [QUARANTINE-IP](https://apility.io/list?id=QUARANTINE-IP&type=badip)
 * Country [QUARANTINE-COUNTRY](https://apility.io/list?id=QUARANTINE-COUNTRY&type=badip)
@@ -2214,14 +2214,14 @@ However, it may be the case that our customers want to create their own blacklis
 
 For each type of object it's possible to perform four different actions:
 
-* add the object to the blacklist,
+* add the object to the blocklist,
 * remove it,
 * check if the object is in the list or
 * get all the elements in the list.
 
-As part of the attributes of the object, the Time To Live of the object in the black list is the most important. The TTL or Time to Live is the number of seconds the object will be in the black list before expiring and disappearing. Hence, it's possible to temporaly ban an IP address or set of IP addreses based on some attributes: for example ban the IP address coming from a toxic Autonomous System. Due to this time-based ban this kind of blacklists are referred as QUARANTINED objects.
+As part of the attributes of the object, the Time To Live of the object in the black list is the most important. The TTL or Time to Live is the number of seconds the object will be in the black list before expiring and disappearing. Hence, it's possible to temporaly ban an IP address or set of IP addreses based on some attributes: for example ban the IP address coming from a toxic Autonomous System. Due to this time-based ban this kind of blocklists are referred as QUARANTINED objects.
 
-Finally, to check if the IP belongs to any of these lists it's as simple as using the [IP Check](#ip-check) services of the API. If the IP matches some of the attributes, then the QUARANTINED blacklist will be shown just like the rest of the public blacklist.
+Finally, to check if the IP belongs to any of these lists it's as simple as using the [IP Check](#ip-check) services of the API. If the IP matches some of the attributes, then the QUARANTINED blocklist will be shown just like the rest of the public blocklist.
 
 
 ## Add an IP to the private QUARANTINE-IP backlist
@@ -2246,7 +2246,7 @@ x-content-type-options: nosniff
 ```
 
 
-This endpoint add the IP address passed as argument in the body to the QUARANTINE-IP private blacklist. The TTL must be passed too and it permits two options:
+This endpoint add the IP address passed as argument in the body to the QUARANTINE-IP private blocklist. The TTL must be passed too and it permits two options:
 
 - If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
 - If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
@@ -2278,13 +2278,13 @@ The body must have a valid JSON object composed of two parameters
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-ip | Yes | IP address to add to QUARANTINE-IP blacklist.
-ttl | Yes | Time to Live in seconds of the IP in the blacklist. Zero for never expiring.
+ip | Yes | IP address to add to QUARANTINE-IP blocklist.
+ttl | Yes | Time to Live in seconds of the IP in the blocklist. Zero for never expiring.
 
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP has been added succesfully to the QUARANTINE-IP blacklist. Any other error message means that the IP could not be added:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP has been added succesfully to the QUARANTINE-IP blocklist. Any other error message means that the IP could not be added:
 
 * __HTTP/1.1 400 Bad Request__: The JSON object, IP address and/or the TTL are malformed, the IP address cannot be stored. Check the response text for more information about the error.
 
@@ -2311,12 +2311,12 @@ x-content-type-options: nosniff
 ```
 
 
-This endpoint add the country passed as argument in the body to the QUARANTINE-COUNTRY private blacklist. The TTL must be passed too and it permits two options:
+This endpoint add the country passed as argument in the body to the QUARANTINE-COUNTRY private blocklist. The TTL must be passed too and it permits two options:
 
 - If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
 - If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
 
-The service will automatically obtain the country of the IP using the Geo location service. If the country is in the QUARANTINE-COUNTRY blacklist, it will be reported in the [IP Check](#ip-check) services.
+The service will automatically obtain the country of the IP using the Geo location service. If the country is in the QUARANTINE-COUNTRY blocklist, it will be reported in the [IP Check](#ip-check) services.
 
 
 <aside class="success">
@@ -2346,13 +2346,13 @@ The body must have a valid JSON object composed of two parameters
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-country | Yes | Country ISO 3166-1 alfa-2 code to add to the QUARANTINE-COUNTRY blacklist.
-ttl | Yes | Time to Live in seconds of the Country in the blacklist. Zero for never expiring.
+country | Yes | Country ISO 3166-1 alfa-2 code to add to the QUARANTINE-COUNTRY blocklist.
+ttl | Yes | Time to Live in seconds of the Country in the blocklist. Zero for never expiring.
 
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country has been added succesfully to the QUARANTINE-Country blacklist. Any other error message means that the Country could not be added:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country has been added succesfully to the QUARANTINE-Country blocklist. Any other error message means that the Country could not be added:
 
 * __HTTP/1.1 400 Bad Request__: The JSON object, Country code and/or the TTL are malformed, the Country code cannot be stored. Check the response text for more information about the error.
 
@@ -2379,12 +2379,12 @@ x-content-type-options: nosniff
 ```
 
 
-This endpoint add the continent passed as argument in the body to the QUARANTINE-CONTINENT private blacklist. The TTL must be passed too and it permits two options:
+This endpoint add the continent passed as argument in the body to the QUARANTINE-CONTINENT private blocklist. The TTL must be passed too and it permits two options:
 
 - If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
 - If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
 
-The service will automatically obtain the continent of the IP using the Geo location service. If the continent is in the QUARANTINE-CONTINENT blacklist, it will be reported in the [IP Check](#ip-check) services.
+The service will automatically obtain the continent of the IP using the Geo location service. If the continent is in the QUARANTINE-CONTINENT blocklist, it will be reported in the [IP Check](#ip-check) services.
 
 
 <aside class="success">
@@ -2414,13 +2414,13 @@ The body must have a valid JSON object composed of two parameters
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-continent | Yes | [Continent codes](https://datahub.io/core/continent-codes) to add to the QUARANTINE-CONTINENT blacklist.
-ttl | Yes | Time to Live in seconds of the Continent in the blacklist. Zero for never expiring.
+continent | Yes | [Continent codes](https://datahub.io/core/continent-codes) to add to the QUARANTINE-CONTINENT blocklist.
+ttl | Yes | Time to Live in seconds of the Continent in the blocklist. Zero for never expiring.
 
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent has been added succesfully to the QUARANTINE-CONTINENT blacklist. Any other error message means that the Continent could not be added:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent has been added succesfully to the QUARANTINE-CONTINENT blocklist. Any other error message means that the Continent could not be added:
 
 * __HTTP/1.1 400 Bad Request__: The JSON object, Continent code and/or the TTL are malformed, the Continent code cannot be stored. Check the response text for more information about the error.
 
@@ -2447,12 +2447,12 @@ x-content-type-options: nosniff
 ```
 
 
-This endpoint adds the Autonomous System Number passed as argument in the body to the QUARANTINE-AS private blacklist. The TTL must be passed too and it permits two options:
+This endpoint adds the Autonomous System Number passed as argument in the body to the QUARANTINE-AS private blocklist. The TTL must be passed too and it permits two options:
 
 - If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
 - If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
 
-The service will automatically obtain the AS number of the IP using the AS resolution service. If the AS is in the QUARANTINE-AS blacklist, it will be reported in the [IP Check](#ip-check) services.
+The service will automatically obtain the AS number of the IP using the AS resolution service. If the AS is in the QUARANTINE-AS blocklist, it will be reported in the [IP Check](#ip-check) services.
 
 
 <aside class="success">
@@ -2482,13 +2482,13 @@ The body must have a valid JSON object composed of two parameters
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-asn | Yes | Autonomous System Number (ASN) to add to the QUARANTINE-AS blacklist.
-ttl | Yes | Time to Live in seconds of the AS in the blacklist. Zero for never expiring.
+asn | Yes | Autonomous System Number (ASN) to add to the QUARANTINE-AS blocklist.
+ttl | Yes | Time to Live in seconds of the AS in the blocklist. Zero for never expiring.
 
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS has been added succesfully to the QUARANTINE-AS blacklist. Any other error message means that the AS could not be added:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS has been added succesfully to the QUARANTINE-AS blocklist. Any other error message means that the AS could not be added:
 
 * __HTTP/1.1 400 Bad Request__: The JSON object, AS number and/or the TTL are malformed, the AS cannot be stored. Check the response text for more information about the error.
 
@@ -2524,7 +2524,7 @@ content-length: 14
 
 ```
 
-This endpoint check if the IP address passed as argument in the query string is in the QUARANTINE-IP private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+This endpoint check if the IP address passed as argument in the query string is in the QUARANTINE-IP private blocklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blocklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2551,7 +2551,7 @@ IP | Yes | IP address to check if it is in the QUARANTINE-IP
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP is in the QUARANTINE-IP blacklist. A HTTP/1.1 404 Not Found means that the IP address is not in the QUARANTINE-IP blacklist. Any other error message means that the IP could not be parsed:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the IP is in the QUARANTINE-IP blocklist. A HTTP/1.1 404 Not Found means that the IP address is not in the QUARANTINE-IP blocklist. Any other error message means that the IP could not be parsed:
 
 * __HTTP/1.1 400 Bad Request__: The IP address is malformed. Check the response text for more information about the error.
 
@@ -2587,7 +2587,7 @@ content-length: 14
 
 ```
 
-This endpoint checks if the Country code passed as argument in the query string is in the QUARANTINE-COUNTRY private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+This endpoint checks if the Country code passed as argument in the query string is in the QUARANTINE-COUNTRY private blocklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blocklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2614,7 +2614,7 @@ COUNTRY_CODE | Yes | Country ISO 3166-1 alfa-2 code to check if it is in the QUA
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country code is in the QUARANTINE-COUNTRY blacklist. A HTTP/1.1 404 Not Found means that the Conutry code is not in the QUARANTINE-COUNTRY blacklist. Any other error message means that the Country Code could not be parsed:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Country code is in the QUARANTINE-COUNTRY blocklist. A HTTP/1.1 404 Not Found means that the Conutry code is not in the QUARANTINE-COUNTRY blocklist. Any other error message means that the Country Code could not be parsed:
 
 * __HTTP/1.1 400 Bad Request__: The Country code is malformed. Check the response text for more information about the error.
 
@@ -2650,7 +2650,7 @@ content-length: 14
 
 ```
 
-This endpoint checks if the Continent code passed as argument in the query string is in the QUARANTINE-CONTINENT private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+This endpoint checks if the Continent code passed as argument in the query string is in the QUARANTINE-CONTINENT private blocklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blocklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2677,7 +2677,7 @@ CONTINENT_CODE | Yes | [Continent codes](https://datahub.io/core/continent-codes
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent code is in the QUARANTINE-CONTINENT blacklist. A HTTP/1.1 404 Not Found means that the Continent code is not in the QUARANTINE-CONTINENT blacklist. Any other error message means that the Continent Code could not be parsed:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Continent code is in the QUARANTINE-CONTINENT blocklist. A HTTP/1.1 404 Not Found means that the Continent code is not in the QUARANTINE-CONTINENT blocklist. Any other error message means that the Continent Code could not be parsed:
 
 * __HTTP/1.1 400 Bad Request__: The Continent code is malformed. Check the response text for more information about the error.
 
@@ -2713,7 +2713,7 @@ content-length: 14
 
 ```
 
-This endpoint checks if the AS Number passed as argument in the query string is in the QUARANTINE-AS private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
+This endpoint checks if the AS Number passed as argument in the query string is in the QUARANTINE-AS private blocklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blocklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2740,7 +2740,7 @@ AS_NUM | Yes | Autonmous System Number (ASN) to check if it is in the QUARANTINE
 
 ### Response
 
-The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS is in the QUARANTINE-AS blacklist. A HTTP/1.1 404 Not Found means that the AS is not in the QUARANTINE-AS blacklist. Any other error message means that the AS number could not be parsed:
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS is in the QUARANTINE-AS blocklist. A HTTP/1.1 404 Not Found means that the AS is not in the QUARANTINE-AS blocklist. Any other error message means that the AS number could not be parsed:
 
 * __HTTP/1.1 400 Bad Request__: The AS number (ASN) is malformed. Check the response text for more information about the error.
 
@@ -2772,7 +2772,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip"
 }
 ```
 
-This endpoint returns the full list of the IP addresses and the corresponding TTL in the QUARANTINE-IP private blacklist as a JSON object.
+This endpoint returns the full list of the IP addresses and the corresponding TTL in the QUARANTINE-IP private blocklist as a JSON object.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2835,7 +2835,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/countr
 
 ```
 
-This endpoint returns the full list of the Country codes and the corresponding TTL in the QUARANTINE-COUNTRY private blacklist as a JSON object.
+This endpoint returns the full list of the Country codes and the corresponding TTL in the QUARANTINE-COUNTRY private blocklist as a JSON object.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2894,7 +2894,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/contin
 
 ```
 
-This endpoint returns the full list of the Continent codes and the corresponding TTL in the QUARANTINE-CONTINENT private blacklist as a JSON object.
+This endpoint returns the full list of the Continent codes and the corresponding TTL in the QUARANTINE-CONTINENT private blocklist as a JSON object.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -2952,7 +2952,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as"
 }
 ```
 
-This endpoint returns the full list of the AS Numbers and the corresponding TTL in the QUARANTINE-AS private blacklist as a JSON object.
+This endpoint returns the full list of the AS Numbers and the corresponding TTL in the QUARANTINE-AS private blocklist as a JSON object.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -3009,7 +3009,7 @@ x-content-type-options: nosniff
 
 ```
 
-This endpoint delete the IP address passed as argument in the query string if it exists in the QUARANTINE-IP private blacklist. This API call will delete the IP address no matter if it will expire or not.
+This endpoint delete the IP address passed as argument in the query string if it exists in the QUARANTINE-IP private blocklist. This API call will delete the IP address no matter if it will expire or not.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -3031,7 +3031,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
 callback | Yes | Function to invoke when using JSONP model.
-IP | Yes | IP address to remove from the QUARANTINE-IP blacklist
+IP | Yes | IP address to remove from the QUARANTINE-IP blocklist
 
 
 ### Response
@@ -3061,7 +3061,7 @@ x-content-type-options: nosniff
 
 ```
 
-This endpoint delete the Country code passed as argument in the query string if it exists in the QUARANTINE-COUNTRY private blacklist. This API call will delete the Country code no matter if it will expire or not.
+This endpoint delete the Country code passed as argument in the query string if it exists in the QUARANTINE-COUNTRY private blocklist. This API call will delete the Country code no matter if it will expire or not.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -3083,7 +3083,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
 callback | Yes | Function to invoke when using JSONP model.
-COUNTRY_CODE | Yes | Country Code to remove from the QUARANTINE-COUNTRY blacklist
+COUNTRY_CODE | Yes | Country Code to remove from the QUARANTINE-COUNTRY blocklist
 
 
 ### Response
@@ -3114,7 +3114,7 @@ x-content-type-options: nosniff
 
 ```
 
-This endpoint delete the Continent code passed as argument in the query string if it exists in the QUARANTINE-CONTINENT private blacklist. This API call will delete the Continent code no matter if it will expire or not.
+This endpoint delete the Continent code passed as argument in the query string if it exists in the QUARANTINE-CONTINENT private blocklist. This API call will delete the Continent code no matter if it will expire or not.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -3136,7 +3136,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
 callback | Yes | Function to invoke when using JSONP model.
-CONTINENT_CODE | Yes | [Continent code](https://datahub.io/core/continent-codes) to remove from the QUARANTINE-CONTINENT blacklist
+CONTINENT_CODE | Yes | [Continent code](https://datahub.io/core/continent-codes) to remove from the QUARANTINE-CONTINENT blocklist
 
 
 ### Response
@@ -3166,7 +3166,7 @@ x-content-type-options: nosniff
 
 ```
 
-This endpoint delete the AS passed as argument in the query string if it exists in the QUARANTINE-AS private blacklist. This API call will delete the AS no matter if it will expire or not.
+This endpoint delete the AS passed as argument in the query string if it exists in the QUARANTINE-AS private blocklist. This API call will delete the AS no matter if it will expire or not.
 
 <aside class="success">
 This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
@@ -3188,7 +3188,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
 callback | Yes | Function to invoke when using JSONP model.
-AS_NUM | Yes | AS Number to remove from the QUARANTINE-AS blacklist
+AS_NUM | Yes | AS Number to remove from the QUARANTINE-AS blocklist
 
 
 ### Response
@@ -3242,7 +3242,7 @@ source_ip | JSON structure containing the '[ip score](#ip-score)' object as resu
 address | JSON structure containing the '[address score](#address-score)' object as result of the analysis of the email.
 smtp  | JSON structure containing the '[smtp score](#smtp-score)' object as result of the analysis of the email service.
 freemail | JSON structure containing the '[freemail score](#freemail-score)' object as result of the analysis of the email provider.
-email | JSON structure containing the '[email-blacklist score](#email-blacklist-score)' object as result of the look up in the email blacklists.
+email | JSON structure containing the '[email-blacklist score](#email-blacklist-score)' object as result of the look up in the email blocklists.
 disposable | JSON structure containing the '[disposable score](#disposable-score)' object as result of the analysis of the email provider.
 
 ## geoip
@@ -3285,25 +3285,25 @@ networks | Array with the lists of networks of the AS
 
 ## domainname score
 
-The domainname score contains the information of testing different subdomains of the main root domain: NS records, MX records and domain blacklists.
+The domainname score contains the information of testing different subdomains of the main root domain: NS records, MX records and domain blocklists.
 
 Parameter     | Description
 ------------- | -----------
 score | Number describing the result of the algorithm. Negative means 'suspicious' or 'bad' domain. Neutral or positive means it's a 'clean' domain.
-blacklist_ns | Array containing the blacklists where the NS domains were found.
-blacklist_mx | Array containing the blacklists where the MX domains were found.
-blacklist | Array containing the blacklists where the domain was found.
+blacklist_ns | Array containing the blocklists where the NS domains were found.
+blacklist_mx | Array containing the blocklists where the MX domains were found.
+blacklist | Array containing the blocklists where the domain was found.
 mx | Array with the hosts found in the MX records.
 ns | Array with the hosts found in the NS records.
 
 ## ip score
 
-The ip score contains the information of looking up the IP in the blacklists.
+The ip score contains the information of looking up the IP in the blocklists.
 
 Parameter     | Description
 ------------- | -----------
 score | Number describing the result of the algorithm. Negative means 'suspicious' or 'bad' IP. Neutral or positive means it's a 'clean' IP.
-blacklist | Array containing the blacklists where the IP was found.
+blacklist | Array containing the blocklists where the IP was found.
 is_quarantined | If the IP has been added by the user to the quarantine lists.
 address | IPv4 or IPv6 resolved.
 
@@ -3348,9 +3348,9 @@ is_disposable | The domain has been found in any Disposable Email Address Provid
 
 ## email score
 
-The email score contains the information of looking up the email in the blacklists.
+The email score contains the information of looking up the email in the blocklists.
 
 Parameter     | Description
 ------------- | -----------
 score | Number describing the result of the algorithm. Negative means 'suspicious' or 'bad' email. Neutral or positive means it's a 'clean' email.
-blacklist | Array containing the blacklists where the email was found.
+blacklist | Array containing the blocklists where the email was found.
