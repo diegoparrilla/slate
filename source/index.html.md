@@ -3215,7 +3215,7 @@ Because there may be a large amount of data available, it is possible to restric
 * Number of items to be returned per page.
 * The page number.
 
-Calling this API always returns items from the most recent to the oldest, so Unix time always indicates the most fresh transaction. If none of these parameters are provided, the API call will return the history from the current date with a maximum of 10 items.
+Calling this API always returns items from the most recent to the oldest, so Unix time always indicates the freshsest transaction. If none of these parameters are provided, the API call will return the history from the current date with a maximum of 10 items.
 
 Every call made to the API will count as a new HIT in the quota of the user.
 
