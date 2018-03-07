@@ -3197,8 +3197,333 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 
 * __HTTP/1.1 400 Bad Request__: The AS Number is malformed. Check the response text for more information about the error.
 
+# Resource History
+
+Our databases contain several million active records of IP addresses, domains and emails. But this is just the tip of the iceberg because every day we process more than a million transactions on this database. A resource such as an IP address can enter and exit a blocking list on multiple occasions, which added to the fact that it can enter and exit different lists at the same time allows our users to get an idea of the magnitude of the information we handle.
+
+For those cybersecurity experts who wish to know the historical activity of these resources in our database, we now make available to our users complete access to the history we have available for each one.
+
+The resources available are:
+
+* IP address
+* Domains
+* Emails
+
+Because there may be a large amount of data available, it is possible to restrict queries by providing:
+
+* Unix time in seconds from which the query will be made.
+* Number of items to be returned per page.
+* The page number.
+
+Calling this API always returns items from the most recent to the oldest, so Unix time always indicates the most fresh transaction. If none of these parameters are provided, the API call will return the history from the current date with a maximum of 10 items.
+
+Every call made to the API will count as a new HIT in the quota of the user.
+
+<aside class="success">
+This is a free and paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+## Get IP address history
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/ip/<IP>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+```
+
+>No matter if the IP has information in the database, it will always return the changes_ip JSON object. If it has information in the database:
+
+```shell
+{
+    "changes_ip": [
+        {
+            "blacklist_change": "FAIL2BAN-ALL,FAIL2BAN-SSH",
+            "blacklists": "",
+            "timestamp": 1520187309162,
+            "command": "rem",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-ALL",
+            "blacklists": "FAIL2BAN-ALL,FAIL2BAN-SSH",
+            "timestamp": 1520108359925,
+            "command": "add",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-ALL",
+            "blacklists": "FAIL2BAN-SSH",
+            "timestamp": 1520104871843,
+            "command": "rem",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH",
+            "blacklists": "FAIL2BAN-ALL,FAIL2BAN-SSH",
+            "timestamp": 1520072166966,
+            "command": "add",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH",
+            "blacklists": "FAIL2BAN-ALL",
+            "timestamp": 1520068580059,
+            "command": "rem",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "blacklists": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "timestamp": 1519946120669,
+            "command": "add",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "blacklists": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "timestamp": 1519946118892,
+            "command": "add",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "blacklists": "",
+            "timestamp": 1519661715742,
+            "command": "rem",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH",
+            "blacklists": "FAIL2BAN-SSH,FAIL2BAN-ALL",
+            "timestamp": 1519647423138,
+            "command": "add",
+            "ip": "XX.XX.XX.XX"
+        },
+        {
+            "blacklist_change": "FAIL2BAN-SSH",
+            "blacklists": "FAIL2BAN-ALL",
+            "timestamp": 1519643865538,
+            "command": "rem",
+            "ip": "XX.XX.XX.XX"
+        }
+    ]
+}
+```
+
+>If there is no information in the database:
+
+```shell
+{
+    "changes_ip": []
+}
+```
 
 
+The changes_ip JSON object contains a list of transaction_ip objects. Each transaction IP object will return:
+
+* timestamp: The UNIX time in seconds when the transaction was performed.
+* command: Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+* ip: IP address of the transaction
+* blacklist_change: Blackist/Blocklist added or removed thanks to the transaction.
+* blacklists: List of blacklists/blocklists after the execution of the command and the blacklist change.
+
+### HTTP Request
+
+`GET https://api.apility.net/changes/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+timestamp | No | UNIX time in seconds to filter the search in the database. If ignored, then current UNIX time is taken.
+page | No | Page number to paginate the result. Always start at 1. If ignored, then search for page one.
+items | No | Number of items per page. Can be in the range of 5 to 200. If ignored, then return 10 items.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error message means something is wrong in the system and you should contact support.
+
+If everything goes fine then it will also return the following JSON object:
+
+Parameter | Description
+--------- | -----------
+changes_ip  | JSON object containing a list of JSON '[transaction ip](#transaction-ip)' objects.
+
+
+## Get Domain history
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/domain/<DOMAIN>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+```
+
+>No matter if the Domain has information in the database, it will always return the changes_domain JSON object. If it has information in the database:
+
+```shell
+{
+    "changes_domain": [
+        {
+            "blacklist_change": "LISINGE-DED",
+            "blacklists": "LISINGE-DED,MARTENSON-DED,IVOLO-DED,DEA",
+            "command": "add",
+            "domain": "XXX.XXX.XXX",
+            "timestamp": 1519836616549
+        },
+        {
+            "blacklist_change": "MARTENSON-DED",
+            "blacklists": "MARTENSON-DED,IVOLO-DED,DEA",
+            "command": "add",
+            "domain": "XXX.XXX.XXX",
+            "timestamp": 1519708978688
+        },
+        {
+            "blacklist_change": "IVOLO-DED",
+            "blacklists": "IVOLO-DED,DEA",
+            "command": "add",
+            "domain": "XXX.XXX.XXX",
+            "timestamp": 1519708958303
+        },
+        {
+            "blacklist_change": "DEA",
+            "blacklists": "DEA",
+            "command": "add",
+            "domain": "XXX.XXX.XXX",
+            "timestamp": 1519707737136
+        }
+    ]
+}
+```
+
+>If there is no information in the database:
+
+```shell
+{
+    "changes_domain": []
+}
+```
+
+
+The changes_domain JSON object contains a list of transaction_domain objects. Each transaction Domain object will return:
+
+* timestamp: The UNIX time in seconds when the transaction was performed.
+* command: Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+* domain: Domain of the transaction
+* blacklist_change: Blackist/Blocklist added or removed thanks to the transaction.
+* blacklists: List of blacklists/blocklists after the execution of the command and the blacklist change.
+
+### HTTP Request
+
+`GET https://api.apility.net/changes/domain/<DOMAIN>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+timestamp | No | UNIX time in seconds to filter the search in the database. If ignored, then current UNIX time is taken.
+page | No | Page number to paginate the result. Always start at 1. If ignored, then search for page one.
+items | No | Number of items per page. Can be in the range of 5 to 200. If ignored, then return 10 items.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error message means something is wrong in the system and you should contact support.
+
+If everything goes fine then it will also return the following JSON object:
+
+Parameter | Description
+--------- | -----------
+changes_domain  | JSON object containing a list of JSON '[transaction domain](#transaction-domain)' objects.
+
+## Get Email history
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/email/<EMAIL>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+```
+
+>No matter if the Email has information in the database, it will always return the changes_email JSON object. If it has information in the database:
+
+```shell
+{
+    "changes_email": [
+        {
+            "blacklist_change": "STOPFORUMSPAM-365",
+            "blacklists": "",
+            "command": "rem",
+            "email": "XXXXX@XXXXX.COM",
+            "timestamp": 1518666525299
+        },
+        {
+            "blacklist_change": "STOPFORUMSPAM-365",
+            "blacklists": "STOPFORUMSPAM-365",
+            "command": "add",
+            "email": "XXXXX@XXXXX.COM",
+            "timestamp": 1518461696289
+        }
+    ]
+}
+```
+
+>If there is no information in the database:
+
+```shell
+{
+    "changes_email": []
+}
+```
+
+
+The changes_email JSON object contains a list of transaction_email objects. Each transaction Email object will return:
+
+* timestamp: The UNIX time in seconds when the transaction was performed.
+* command: Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+* email: Email of the transaction
+* blacklist_change: Blackist/Blocklist added or removed thanks to the transaction.
+* blacklists: List of blacklists/blocklists after the execution of the command and the blacklist change.
+
+### HTTP Request
+
+`GET https://api.apility.net/changes/email/<EMAIL>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+timestamp | No | UNIX time in seconds to filter the search in the database. If ignored, then current UNIX time is taken.
+page | No | Page number to paginate the result. Always start at 1. If ignored, then search for page one.
+items | No | Number of items per page. Can be in the range of 5 to 200. If ignored, then return 10 items.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error message means something is wrong in the system and you should contact support.
+
+If everything goes fine then it will also return the following JSON object:
+
+Parameter | Description
+--------- | -----------
+changes_email  | JSON object containing a list of JSON '[transaction email](#transaction-email)' objects.
 
 
 
@@ -3354,3 +3679,39 @@ Parameter     | Description
 ------------- | -----------
 score | Number describing the result of the algorithm. Negative means 'suspicious' or 'bad' email. Neutral or positive means it's a 'clean' email.
 blacklist | Array containing the blocklists where the email was found.
+
+## transaction ip
+
+The transaction ip object contains information about what action was performed on the blacklists/blocklists in the database.
+
+Parameter     | Description
+------------- | -----------
+timestamp | The UNIX time in seconds when the transaction was performed.
+command | 'add' or 'rem'. Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+ip | IP address of the transaction
+blacklist_change | Blackist/Blocklist added or removed thanks to the transaction.
+blacklists | List of blacklists/blocklists after the execution of the command and the blacklist change.
+
+## transaction domain
+
+The transaction domain object contains information about what action was performed on the blacklists/blocklists in the database.
+
+Parameter     | Description
+------------- | -----------
+timestamp | The UNIX time in seconds when the transaction was performed.
+command | 'add' or 'rem'. Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+domain | Domain of the transaction
+blacklist_change | Blackist/Blocklist added or removed thanks to the transaction.
+blacklists | List of blacklists/blocklists after the execution of the command and the blacklist change.
+
+## transaction email
+
+The transaction email object contains information about what action was performed on the blacklists/blocklists in the database.
+
+Parameter     | Description
+------------- | -----------
+timestamp | The UNIX time in seconds when the transaction was performed.
+command | 'add' or 'rem'. Type of transaction in the database: ADD to the blacklist or REMove of the blacklist.
+email | Email of the transaction
+blacklist_change | Blackist/Blocklist added or removed thanks to the transaction.
+blacklists | List of blacklists/blocklists after the execution of the command and the blacklist change.
