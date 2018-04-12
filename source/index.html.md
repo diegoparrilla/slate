@@ -63,6 +63,8 @@ There are several different type of resources that will grow in time:
 * __Emails__: Emails used in spam and fraudulent activities.
 * __IP Geolocation__: For Geolocation activities, access to a Geolocation Rest API based in MaxMind GeoIP Lite database is also available.
 * __Autonomous Systems__: Get the Autonomous System and network by the IP or the number.
+* __Resource History__:  Historical activity of these resources. Complete access to the history of changes.
+* __Whois data__: Database query of RFC 3912 protocol.
 
 ## What blacklists are in use?
 
@@ -3534,11 +3536,310 @@ changes_email  | JSON object containing a list of JSON '[transaction email](#tra
 
 
 
+# WHOIS query
+
+WHOIS is a query and response protocol that is widely used for querying databases that store the registered users or assignees of an Internet resource, such as a domain name, an IP address block, or an autonomous system, but is also used for a wider range of other information. The protocol stores and delivers database content in a human-readable format. The WHOIS protocol is documented in RFC 3912.
+
+This endpoint implements a WHOIS query service and returns as much information as possible for a given resource  in JSON format.
+
+The resources currently available are (more in the future):
+
+* IP address
 
 
+The API call will try to return the WHOIS information of the resource cached in our databases. If the cache has expired or the resource is not cached then it will perform a rountrip to the Regional Internet Registry (RIR) to which the resource belongs.
+
+Every call made to the API will count as a new HIT in the quota of the user.
+
+## Lookup WHOIS IP address
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/whois/ip/<IP>"
+```
+
+>No matter if the IP address has information in any RIR, it will always return the whois JSON object. If the IP address has information in any RIR:
+
+```shell
+{
+    "whois": {
+        "asn_country_code": "US",
+        "objects": {
+            "ABUSE5250-ARIN": {
+                "handle": "ABUSE5250-ARIN",
+                "events": [
+                    {
+                        "action": "last changed",
+                        "actor": null,
+                        "timestamp": "2017-12-04T10:49:20-05:00"
+                    },
+                    {
+                        "action": "registration",
+                        "actor": null,
+                        "timestamp": "2015-11-06T15:36:35-05:00"
+                    }
+                ],
+                "roles": [
+                    "abuse"
+                ],
+                "status": [
+                    "validated"
+                ],
+                "contact": {
+                    "email": [
+                        {
+                            "type": null,
+                            "value": "network-abuse@google.com"
+                        }
+                    ],
+                    "phone": [
+                        {
+                            "type": [
+                                "work",
+                                "voice"
+                            ],
+                            "value": "+1-650-253-0000"
+                        }
+                    ],
+                    "role": null,
+                    "name": "Abuse",
+                    "address": [
+                        {
+                            "type": null,
+                            "value": "1600 Amphitheatre Parkway\nMountain View\nCA\n94043\nUnited States"
+                        }
+                    ],
+                    "title": null,
+                    "kind": "group"
+                },
+                "remarks": [
+                    {
+                        "links": null,
+                        "title": "Registration Comments",
+                        "description": "Please note that the recommended way to file abuse complaints are located in the following links.\r\n\r\nTo report abuse and illegal activity: https://www.google.com/intl/en_US/goodtoknow/online-safety/reporting-abuse/ \r\n\r\nFor legal requests: http://support.google.com/legal \r\n\r\nRegards,\r\nThe Google Team"
+                    }
+                ],
+                "links": [
+                    "https://rdap.arin.net/registry/entity/ABUSE5250-ARIN",
+                    "https://whois.arin.net/rest/poc/ABUSE5250-ARIN"
+                ],
+                "events_actor": null,
+                "notices": [
+                    {
+                        "links": [
+                            "https://www.arin.net/whois_tou.html"
+                        ],
+                        "title": "Terms of Service",
+                        "description": "By using the ARIN RDAP/Whois service, you are agreeing to the RDAP/Whois Terms of Use"
+                    }
+                ],
+                "raw": null,
+                "entities": null
+            },
+            "GOGL": {
+                "handle": "GOGL",
+                "events": [
+                    {
+                        "action": "last changed",
+                        "actor": null,
+                        "timestamp": "2017-12-21T13:24:44-05:00"
+                    },
+                    {
+                        "action": "registration",
+                        "actor": null,
+                        "timestamp": "2000-03-30T00:00:00-05:00"
+                    }
+                ],
+                "roles": [
+                    "registrant"
+                ],
+                "status": null,
+                "contact": {
+                    "email": null,
+                    "phone": null,
+                    "role": null,
+                    "name": "Google LLC",
+                    "address": [
+                        {
+                            "type": null,
+                            "value": "1600 Amphitheatre Parkway\nMountain View\nCA\n94043\nUnited States"
+                        }
+                    ],
+                    "title": null,
+                    "kind": "org"
+                },
+                "remarks": null,
+                "links": [
+                    "https://rdap.arin.net/registry/entity/GOGL",
+                    "https://whois.arin.net/rest/org/GOGL"
+                ],
+                "events_actor": null,
+                "notices": null,
+                "raw": null,
+                "entities": [
+                    "ABUSE5250-ARIN",
+                    "ZG39-ARIN"
+                ]
+            },
+            "ZG39-ARIN": {
+                "handle": "ZG39-ARIN",
+                "events": [
+                    {
+                        "action": "last changed",
+                        "actor": null,
+                        "timestamp": "2017-10-17T06:35:04-04:00"
+                    },
+                    {
+                        "action": "registration",
+                        "actor": null,
+                        "timestamp": "2000-11-30T13:54:08-05:00"
+                    }
+                ],
+                "roles": [
+                    "administrative",
+                    "technical"
+                ],
+                "status": [
+                    "validated"
+                ],
+                "contact": {
+                    "email": [
+                        {
+                            "type": null,
+                            "value": "arin-contact@google.com"
+                        }
+                    ],
+                    "phone": [
+                        {
+                            "type": [
+                                "work",
+                                "voice"
+                            ],
+                            "value": "+1-650-253-0000"
+                        }
+                    ],
+                    "role": null,
+                    "name": "Google LLC",
+                    "address": [
+                        {
+                            "type": null,
+                            "value": "1600 Amphitheatre Parkway\nMountain View\nCA\n94043\nUnited States"
+                        }
+                    ],
+                    "title": null,
+                    "kind": "group"
+                },
+                "remarks": null,
+                "links": [
+                    "https://rdap.arin.net/registry/entity/ZG39-ARIN",
+                    "https://whois.arin.net/rest/poc/ZG39-ARIN"
+                ],
+                "events_actor": null,
+                "notices": [
+                    {
+                        "links": [
+                            "https://www.arin.net/whois_tou.html"
+                        ],
+                        "title": "Terms of Service",
+                        "description": "By using the ARIN RDAP/Whois service, you are agreeing to the RDAP/Whois Terms of Use"
+                    }
+                ],
+                "raw": null,
+                "entities": null
+            }
+        },
+        "asn_cidr": "8.8.8.0/24",
+        "nir": null,
+        "entities": [
+            "GOGL"
+        ],
+        "network": {
+            "handle": "NET-8-8-8-0-1",
+            "status": null,
+            "type": null,
+            "start_address": "8.8.8.0",
+            "end_address": "8.8.8.255",
+            "remarks": null,
+            "events": [
+                {
+                    "action": "last changed",
+                    "actor": null,
+                    "timestamp": "2014-03-14T15:52:05-04:00"
+                },
+                {
+                    "action": "registration",
+                    "actor": null,
+                    "timestamp": "2014-03-14T15:52:05-04:00"
+                }
+            ],
+            "parent_handle": "NET-8-0-0-0-1",
+            "cidr": "8.8.8.0/24",
+            "country": null,
+            "raw": null,
+            "name": "LVLT-GOGL-8-8-8",
+            "notices": [
+                {
+                    "links": [
+                        "https://www.arin.net/whois_tou.html"
+                    ],
+                    "title": "Terms of Service",
+                    "description": "By using the ARIN RDAP/Whois service, you are agreeing to the RDAP/Whois Terms of Use"
+                }
+            ],
+            "ip_version": "v4",
+            "links": [
+                "https://rdap.arin.net/registry/ip/8.8.8.0",
+                "https://whois.arin.net/rest/net/NET-8-8-8-0-1",
+                "https://rdap.arin.net/registry/ip/8.0.0.0/8"
+            ]
+        },
+        "asn_description": "GOOGLE - Google LLC, US",
+        "asn_date": "1992-12-01",
+        "query": "8.8.8.8",
+        "raw": null,
+        "asn_registry": "arin",
+        "asn": "15169"
+    }
+}```
+
+>If there is no information in any RIR:
+
+```shell
+{
+    "whois": []
+}
+```
 
 
+The whois JSON object contains all the information returned by the RIR about the object. See a full description of the objet whois.
 
+
+### HTTP Request
+
+`GET https://api.apility.net/whois/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error message means something went wrong in the system and you should contact support.
+
+If everything goes fine then it will also return the following JSON object:
+
+Parameter | Description
+--------- | -----------
+whois  | JSON object containing all the information returned by the RIR '[whois](#whois)' object.
 
 
 # Objects
@@ -3715,3 +4016,94 @@ command | 'add' or 'rem'. Type of transaction in the database: ADD to the blackl
 email | Email of the transaction
 blacklist_change | Blackist added or removed thanks to the transaction.
 blacklists | List of blacklists after the execution of the command and the blacklist change.
+
+## whois
+
+Contains many nested lists and objects, detailed below.
+
+Parameter     | Description
+------------- | -----------
+query |	The IP address
+asn	| Globally unique identifier used for routing information exchange with Autonomous Systems.
+asn_cidr | Network routing block assigned to an ASN.
+asn_country_code | ASN assigned country code in ISO 3166-1 format.
+asn_date | ASN allocation date in ISO 8601 format.
+asn_registry | ASN assigned regional internet registry.
+asn_description | The ASN description
+network | The assigned network for an IP address. May be a parent or child network. See [Network](#whois_network) object.
+entities | list of object names referenced by an RIR network. Map these to the objects keys.
+objects | The objects (entities) referenced by an RIR network or by other entities (depending on depth parameter). Keys are the object names with values as [Object](#whois_object).
+
+## whois network
+
+The parameters mapped to the network in the objects list within the [whois](#whois) object.
+
+Parameter     | Description
+------------- | -----------
+cidr	|	Network routing block an IP address belongs to.
+country	|	Country code registered with the RIR in ISO 3166-1 format.
+end_address	|	The last IP address in a network block.
+events	|	List of events. See [Events](#whois_event) object.
+handle	|	Unique identifier for a registered object.
+ip_version	|	IP protocol version (v4 or v6) of an IP address.
+links	|	HTTP/HTTPS links provided for an RIR object.
+name	|	The identifier assigned to the network registration for an IP address.
+notices	|	List of notice objects. See [Notices](#whois_notice) object.
+parent_handle	|	Unique identifier for the parent network of a registered network.
+remarks	|	List of remark (notice) dictionaries. See [Notices](#whois_notice) object.
+start_address	|	The first IP address in a network block.
+status	|	List indicating the state of a registered object.
+type	|	The RIR classification of a registered network.
+
+## whois object
+
+The parameters mapped to the object (entity) in the objects list within the [whois](#whois).
+
+Parameter     | Description
+------------- | -----------
+contact	|	Contact information registered with an RIR object. See [Object Contact](#whois_object_contact).
+entities	|	List of object names referenced by an RIR object. Map these to other objects keys.
+events	|	List of event dictionaries. See [Events](#whois_event) object.
+events_actor	|	List of event (no actor) dictionaries. See [Events](#whois_event) object.
+handle	|	Unique identifier for a registered object.
+links	|	List of HTTP/HTTPS links provided for an RIR object.
+notices	|	List of notice dictionaries. See [Notices](#whois_notice) object.
+remarks	|	List of remark (notice) dictionaries. See [Notices](#whois_notice) object.
+roles	|	List of roles assigned to a registered object.
+status	|	List indicating the state of a registered object.
+
+## whois object contact
+
+The contact information registered to an RIR object. This is the contact key contained in [Object](#whois_object).
+
+Parameter     | Description
+------------- | -----------
+address	|	List of contact postal address dictionaries. Contains key type and value.
+email	|	List of contact email address dictionaries. Contains key type and value.
+kind	|	The contact information kind (individual, group, org).
+name	|	The contact name.
+phone	|	List of contact phone number dictionaries. Contains key type and value.
+role	|	The contact’s role.
+title	|	The contact’s position or job title.
+
+## whois event
+
+Common to lists of events in the registry.
+
+Parameter     | Description
+------------- | -----------
+action	|	The reason for an event.
+timestamp	|	The date an event occured in ISO 8601 format.
+actor	|	The identifier for an event initiator (if any).
+
+
+## whois notice
+
+Information contained in notices and remarks.
+
+Parameter     | Description
+------------- | -----------
+title	|	The title/header for a notice.
+description	|	The description/body of a notice.
+links	|	list of HTTP/HTTPS links provided for a notice.
+
