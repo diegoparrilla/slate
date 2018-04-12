@@ -4030,9 +4030,9 @@ asn_country_code | ASN assigned country code in ISO 3166-1 format.
 asn_date | ASN allocation date in ISO 8601 format.
 asn_registry | ASN assigned regional internet registry.
 asn_description | The ASN description
-network | The assigned network for an IP address. May be a parent or child network. See [Network](#whois_network) object.
+network | The assigned network for an IP address. May be a parent or child network. See [Network](#whois-network) object.
 entities | list of object names referenced by an RIR network. Map these to the objects keys.
-objects | The objects (entities) referenced by an RIR network or by other entities (depending on depth parameter). Keys are the object names with values as [Object](#whois_object).
+objects | The objects (entities) referenced by an RIR network or by other entities (depending on depth parameter). Keys are the object names with values as [Object](#whois-object).
 
 ## whois network
 
@@ -4043,14 +4043,14 @@ Parameter     | Description
 cidr	|	Network routing block an IP address belongs to.
 country	|	Country code registered with the RIR in ISO 3166-1 format.
 end_address	|	The last IP address in a network block.
-events	|	List of events. See [Events](#whois_event) object.
+events	|	List of events. See [Events](#whois-event) object.
 handle	|	Unique identifier for a registered object.
 ip_version	|	IP protocol version (v4 or v6) of an IP address.
 links	|	HTTP/HTTPS links provided for an RIR object.
 name	|	The identifier assigned to the network registration for an IP address.
-notices	|	List of notice objects. See [Notices](#whois_notice) object.
+notices	|	List of notice objects. See [Notices](#whois-notice) object.
 parent_handle	|	Unique identifier for the parent network of a registered network.
-remarks	|	List of remark (notice) dictionaries. See [Notices](#whois_notice) object.
+remarks	|	List of remark (notice) dictionaries. See [Notices](#whois-notice) object.
 start_address	|	The first IP address in a network block.
 status	|	List indicating the state of a registered object.
 type	|	The RIR classification of a registered network.
@@ -4061,20 +4061,20 @@ The parameters mapped to the object (entity) in the objects list within the [who
 
 Parameter     | Description
 ------------- | -----------
-contact	|	Contact information registered with an RIR object. See [Object Contact](#whois_object_contact).
+contact	|	Contact information registered with an RIR object. See [Object Contact](#whois-object_contact).
 entities	|	List of object names referenced by an RIR object. Map these to other objects keys.
-events	|	List of event dictionaries. See [Events](#whois_event) object.
-events_actor	|	List of event (no actor) dictionaries. See [Events](#whois_event) object.
+events	|	List of event dictionaries. See [Events](#whois-event) object.
+events_actor	|	List of event (no actor) dictionaries. See [Events](#whois-event) object.
 handle	|	Unique identifier for a registered object.
 links	|	List of HTTP/HTTPS links provided for an RIR object.
-notices	|	List of notice dictionaries. See [Notices](#whois_notice) object.
-remarks	|	List of remark (notice) dictionaries. See [Notices](#whois_notice) object.
+notices	|	List of notice dictionaries. See [Notices](#whois-notice) object.
+remarks	|	List of remark (notice) dictionaries. See [Notices](#whois-notice) object.
 roles	|	List of roles assigned to a registered object.
 status	|	List indicating the state of a registered object.
 
 ## whois object contact
 
-The contact information registered to an RIR object. This is the contact key contained in [Object](#whois_object).
+The contact information registered to an RIR object. This is the contact key contained in [Object](#whois-object).
 
 Parameter     | Description
 ------------- | -----------
