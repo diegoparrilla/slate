@@ -589,6 +589,8 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
+quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
 ### URL Parameters
 
@@ -734,6 +736,8 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
+quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
 ### URL Parameters
 
@@ -1035,6 +1039,8 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
+quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
 ### URL Parameters
 
@@ -1242,6 +1248,8 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
+quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
 ### URL Parameters
 
@@ -2226,7 +2234,7 @@ As part of the attributes of the object, the Time To Live of the object in the b
 Finally, to check if the IP belongs to any of these lists it's as simple as using the [IP Check](#ip-check) services of the API. If the IP matches some of the attributes, then the QUARANTINED blacklist will be shown just like the rest of the public blacklist.
 
 
-## Add an IP to the private QUARANTINE-IP backlist
+## Add an IP to the private QUARANTINE-IP blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"ip":<IP>,"ttl":<TTL>}' "https://api.apility.net/quarantine/ip"
@@ -2291,7 +2299,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The JSON object, IP address and/or the TTL are malformed, the IP address cannot be stored. Check the response text for more information about the error.
 
 
-## Add the Country of an IP address to the private QUARANTINE-COUNTRY backlist
+## Add the Country of an IP address to the private QUARANTINE-COUNTRY blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"country":<COUNTRY_CODE>,"ttl":<TTL>}' "https://api.apility.net/quarantine/country"
@@ -2359,7 +2367,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The JSON object, Country code and/or the TTL are malformed, the Country code cannot be stored. Check the response text for more information about the error.
 
 
-## Add the Continent of an IP address to the private QUARANTINE-CONTINENT backlist
+## Add the Continent of an IP address to the private QUARANTINE-CONTINENT blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"continent":<CONTINENT_CODE>,"ttl":<TTL>}' "https://api.apility.net/quarantine/continent"
@@ -2427,7 +2435,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The JSON object, Continent code and/or the TTL are malformed, the Continent code cannot be stored. Check the response text for more information about the error.
 
 
-## Add the Autonomous System (AS) that owns the IP address to the private QUARANTINE-AS backlist
+## Add the Autonomous System (AS) that owns the IP address to the private QUARANTINE-AS blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"asn":<AS_NUMBER>,"ttl":<TTL>}' "https://api.apility.net/quarantine/as"
@@ -2495,7 +2503,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The JSON object, AS number and/or the TTL are malformed, the AS cannot be stored. Check the response text for more information about the error.
 
 
-## Check if the IP is in the private QUARANTINE-IP backlist
+## Check if the IP is in the private QUARANTINE-IP blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip/<IP>"
@@ -2558,7 +2566,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The IP address is malformed. Check the response text for more information about the error.
 
 
-## Check if the Country is in the private QUARANTINE-COUNTRY backlist
+## Check if the Country is in the private QUARANTINE-COUNTRY blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/country/<COUNTRY_CODE>"
@@ -2621,7 +2629,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The Country code is malformed. Check the response text for more information about the error.
 
 
-## Check if the Continent is in the private QUARANTINE-CONTINENT backlist
+## Check if the Continent is in the private QUARANTINE-CONTINENT blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/continent/<CONTINENT_CODE>"
@@ -2684,7 +2692,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The Continent code is malformed. Check the response text for more information about the error.
 
 
-## Check if the AS is in the private QUARANTINE-AS backlist
+## Check if the AS is in the private QUARANTINE-AS blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as/<AS_NUM>"
@@ -2747,7 +2755,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The AS number (ASN) is malformed. Check the response text for more information about the error.
 
 
-## Get full list of IP addresses in the private QUARANTINE-IP backlist
+## Get full list of IP addresses in the private QUARANTINE-IP blacklist
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip"
@@ -2809,7 +2817,7 @@ Parameter     | Description
 quarantined | List containing the pair of IP addresses and TTL.
 
 
-## Get full list of Country codes in the private QUARANTINE-COUNTRY backlist
+## Get full list of Country codes in the private QUARANTINE-COUNTRY blacklist
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/country"
@@ -2872,7 +2880,7 @@ Parameter     | Description
 quarantined | List containing the pair of Country codes and TTL.
 
 
-## Get full list of Continent codes in the private QUARANTINE-CONTINENT backlist
+## Get full list of Continent codes in the private QUARANTINE-CONTINENT blacklist
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/continent"
@@ -2931,7 +2939,7 @@ Parameter     | Description
 quarantined | List containing the pair of [Continent codes](https://datahub.io/core/continent-codes) and TTL.
 
 
-## Get full list of AS in the private QUARANTINE-AS backlist
+## Get full list of AS in the private QUARANTINE-AS blacklist
 
 ```shell
 $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as"
@@ -2991,7 +2999,7 @@ quarantined | List containing the pair of AS Numbers and TTL.
 
 
 
-## Delete an IP address if it is in the private QUARANTINE-IP backlist
+## Delete an IP address if it is in the private QUARANTINE-IP blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/ip/<IP>"
@@ -3043,7 +3051,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The IP address is malformed. Check the response text for more information about the error.
 
 
-## Delete a Country Code if it is in the private QUARANTINE-COUNTRY backlist
+## Delete a Country Code if it is in the private QUARANTINE-COUNTRY blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/country/<COUNTRY_CODE>"
@@ -3096,7 +3104,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 
 
 
-## Delete a Continent Code if it is in the private QUARANTINE-CONTINENT backlist
+## Delete a Continent Code if it is in the private QUARANTINE-CONTINENT blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/continent/<CONTINENT_CODE>"
@@ -3148,7 +3156,7 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 * __HTTP/1.1 400 Bad Request__: The Continent code is malformed. Check the response text for more information about the error.
 
 
-## Delete an AS if it is in the private QUARANTINE-AS backlist
+## Delete an AS if it is in the private QUARANTINE-AS blacklist
 
 ```shell
 $ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/AS/<AS_NUM>"
@@ -3198,6 +3206,74 @@ AS_NUM | Yes | AS Number to remove from the QUARANTINE-AS blacklist
 The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
 
 * __HTTP/1.1 400 Bad Request__: The AS Number is malformed. Check the response text for more information about the error.
+
+
+
+
+## Add an IP address automatically to QUARANTINE-IP blacklist if a domain or an email has a negative score
+
+> Check a "bad" domain and add IP address 8.8.8.8 to QUARANTINE-IP if found malicious
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/baddomain/mailinator.com?quarantine_ip=8.8.8.8&quarantine_ttl=86400"
+```
+
+```shell
+HTTP/1.1 200 OK
+Server: nginx/1.10.3 (Ubuntu)
+Date: Fri, 24 Nov 2017 14:00:50 GMT
+Content-Type: text/plain; charset=utf-8
+Content-Length: 7
+Connection: keep-alive
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+```
+
+> Check a "bad" email and add IP address 8.8.8.8 to QUARANTINE-IP if found malicious
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/bademail/test@mailinator.com?quarantine_ip=8.8.8.8&quarantine_ttl=86400"
+```
+
+```shell
+HTTP/1.1 200 OK
+Server: nginx/1.10.3 (Ubuntu)
+Date: Fri, 24 Nov 2017 14:00:50 GMT
+Content-Type: text/plain; charset=utf-8
+Content-Length: 7
+Connection: keep-alive
+Strict-Transport-Security: max-age=63072000; includeSubdomains
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+```
+
+
+Sometimes a developer wants the IP address from which the checked domain or email was sent to be stored in the quarantine blacklist to prevent abuse from the same IP address over and over again.
+
+This can be done by adding the `quarantine_ip` and `quarantine_ttl` parameters to the [existing API request for domain](Check-if-an-email-scores-a-negative-or-neutral-score) and [existing API request for email](Check-if-a-domain-scores-a-negative-or-neutral-score). In `quarantine_ip` you should pass the source IP address of the request, and in `quarantine_ttl` you can optionally pass the Time to Live in seconds that should remain the IP address in quarantine. If this parameter is not added, the default Time to Live is 3600 seconds.
+
+
+<aside class="success">
+You always have to pass the API key because quarantine needs to identify as a valid user in the platform. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Resource History
 
