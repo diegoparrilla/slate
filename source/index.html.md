@@ -3251,7 +3251,7 @@ X-Content-Type-Options: nosniff
 
 Sometimes a developer wants the IP address from which the checked domain or email was sent to be stored in the quarantine blacklist to prevent abuse from the same IP address over and over again.
 
-This can be done by adding the `quarantine_ip` and `quarantine_ttl` parameters to the [existing API request for domain](#Check-if-an-email-scores-a-negative-or-neutral-score) and [existing API request for email](#Check-if-a-domain-scores-a-negative-or-neutral-score). In `quarantine_ip` you should pass the source IP address of the request, and in `quarantine_ttl` you can optionally pass the Time to Live in seconds that should remain the IP address in quarantine. If this parameter is not added, the default Time to Live is 3600 seconds.
+This can be done by adding the `quarantine_ip` and `quarantine_ttl` parameters to the [existing API request for domain](#check-if-a-domain-scores-a-negative-or-neutral-score) and [existing API request for email](#check-if-an-email-scores-a-negative-or-neutral-score). In `quarantine_ip` you should pass the source IP address of the request, and in `quarantine_ttl` you can optionally pass the Time to Live in seconds that should remain the IP address in quarantine. If this parameter is not added, the default Time to Live is 3600 seconds.
 
 
 <aside class="success">
