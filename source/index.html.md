@@ -3304,7 +3304,7 @@ This is a free and paid plan feature only. You always have to pass the API key. 
 ## Get IP address history
 
 ```shell
-$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/ip/<IP>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/changes/ip/<IP>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
 ```
 
 >No matter if the IP has information in the database, it will always return the changes_ip JSON object. If it has information in the database:
@@ -3405,7 +3405,7 @@ The changes_ip JSON object contains a list of transaction_ip objects. Each trans
 
 ### HTTP Request
 
-`GET https://api.apility.net/changes/ip/<IP>`
+`GET https://api.apility.net/metadata/changes/ip/<IP>`
 
 ### Header Parameters
 
@@ -3438,7 +3438,7 @@ changes_ip  | JSON object containing a list of JSON '[transaction ip](#transacti
 ## Get Domain history
 
 ```shell
-$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/domain/<DOMAIN>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/changes/domain/<DOMAIN>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
 ```
 
 >No matter if the Domain has information in the database, it will always return the changes_domain JSON object. If it has information in the database:
@@ -3497,7 +3497,7 @@ The changes_domain JSON object contains a list of transaction_domain objects. Ea
 
 ### HTTP Request
 
-`GET https://api.apility.net/changes/domain/<DOMAIN>`
+`GET https://api.apility.net/metadata/changes/domain/<DOMAIN>`
 
 ### Header Parameters
 
@@ -3529,7 +3529,7 @@ changes_domain  | JSON object containing a list of JSON '[transaction domain](#t
 ## Get Email history
 
 ```shell
-$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/changes/email/<EMAIL>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/changes/email/<EMAIL>?timestamp=<TIMESTAMP>&page=<PAGE>&items=<ITEMS>"
 ```
 
 >No matter if the Email has information in the database, it will always return the changes_email JSON object. If it has information in the database:
@@ -3574,7 +3574,7 @@ The changes_email JSON object contains a list of transaction_email objects. Each
 
 ### HTTP Request
 
-`GET https://api.apility.net/changes/email/<EMAIL>`
+`GET https://api.apility.net/metadata/changes/email/<EMAIL>`
 
 ### Header Parameters
 
