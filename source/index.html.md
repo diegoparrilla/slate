@@ -58,7 +58,7 @@ The API will also return HTTP error codes
 
 There are several different type of resources that will grow in time:
 
-* __IP__: IP version 4 that has been used in any abusing activities like spam, attacks, hacking activities and others.
+* __IP__: IP address that has been used in any abusing activities like spam, attacks, hacking activities and others.
 * __Domains__: Domain names used as email registration, source of attacks and others.
 * __Emails__: Emails used in spam and fraudulent activities.
 * __IP Geolocation__: For Geolocation activities, access to a Geolocation Rest API based in MaxMind GeoIP Lite database is also available.
@@ -379,8 +379,8 @@ IP | The IP to look up in the system.
 
 The response can be a 200 or 404 HTTP code if everything is ok:
 
-* __HTTP/1.1 200 OK__ : 200 (OK) means that the IPV4 is in any blacklist and then it is a __bad__ IP
-* __HTTP/1.1 404 Not Found__: and 404 (OK) means that the IPV4 is a clean IP.
+* __HTTP/1.1 200 OK__ : 200 (OK) means that the IP address is in any blacklist and then it is a __bad__ IP
+* __HTTP/1.1 404 Not Found__: and 404 (OK) means that the IP address is a clean IP.
 
 <aside class="warning">
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
