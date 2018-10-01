@@ -1867,17 +1867,26 @@ The maximum number of IP to geo locate per bulk request is 1000. The service wil
 
 The Autonomous System look up services cannot be classified as __blacklists__ too, but are really helpful to deep analyze an IP and create a profile of your users. Just like blacklists they can be accessed with our simple API and they are rate limited the same way. So if you get 429 error (Too many requests) please consider upgrading to a paid plan.
 
-This service returns the Autonomous System information of an IP or ASN:
+This service has two different versións. Version 1 returns the following Autonomous System information of an IP or ASN:
 
 * ASN
 * Country
 * Name
-* Networks
+* IPv4 Networks, as obtained from the BGP tables.
+
+Version 2.0 adds to all these fields more information:
+
+* Description in public databases
+* Date
+* Registry
+* IPv4 Networks with the maintainers and last update.
+* IPv6 Networks with the maintainers and last update.
+
 
 This API request will always return a JSON structure with the information and a 200 HTTP code if the IP or AS number can be found in the system. If not, then it will return a 404 HTTP code as usual.
 
 
-## Get the AS information from an IP.
+## Get the AS information from an IP (V1.0).
 
 > Get the AS data of an IP:
 
@@ -1941,7 +1950,101 @@ as  | JSON structure containing the ''[as](#as)'' object.
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
 </aside>
 
-## Get the AS information from a set of IP (Bulk Request).
+## Get the AS information from an IP (V2.0).
+
+> Get the AS data of an IP:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/as/ip/9.9.9.9"
+```
+
+>The response can be:
+
+```shell
+{
+{
+    "as": {
+        "asn_description": "QUAD9-AS-1 - Quad9",
+        "networks": [],
+        "networks_v4": [
+            {
+                "cidr": "216.58.198.0/24",
+                "description": "Proxy-registered route object",
+                "maintainer": "MAINT-AS3491",
+                "updated": "sajwani@pccwbtn.com 20040404"
+            },
+            ...,
+            {
+                "cidr": "216.58.192.0/19",
+                "description": "route register for foxcomm",
+                "maintainer": "FOXCOMM-MNT",
+                "updated": "michael.renner@level3.com 20031104"
+            }
+        ],
+        "name": "QUAD9-AS-1 - Quad9",
+        "asn_date": "",
+        "asn_registry": "",
+        "networks_v6": [
+            {
+                "cidr": "2620:FE::/48",
+                "description": "Quad9 - Global Public Recursive DNS Resolver Service",
+                "maintainer": "MAINT-AS3856",
+                "updated": "kabindra@pch.net 20171105"
+            }
+        ],
+        "asn_country_code": "US",
+        "country": "US",
+        "asn": "19281"
+    }
+}
+```
+
+This endpoint returns a JSON structure that includes all the information in Version 1 of the API endpoint about the Autonomous System that owns the IP, and information about its networks. The request always returns the status code 200 (HTTP OK) if the IP exists. If the IP is malformed it will return a 400 (HTTP Bad Request) code.
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/as/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | Yes | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP        | The IP to look up the AS in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+as  | JSON structure containing the ''[asv2](#asv2)'' object.
+
+
+<aside class="warning">
+You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+
+
+## Bulk Request - Get the AS information from a set of IP (V1.0).
 
 > Get the AS data of a set of IP addresses:
 
@@ -2043,6 +2146,189 @@ response  | JSON structure containing a JSON structure with the IP adddress and 
 The maximum number of IP addresses to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
+## Bulk Request - Get the AS information from a set of IP (V2.0).
+
+> Get the AS data of a set of IP addresses:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/as_batch/ip/212.231.122.12,8.8.8.8,9.9.9.9"
+```
+
+>The response can be:
+
+```shell
+{
+    "response": [
+        {
+            "ip": "212.231.122.12",
+            "as": {
+                "asn_description": "AS15704, ES",
+                "networks": [
+                    "31.222.80.0/20",
+                    ...,
+                    "217.113.240.0/20"
+                ],
+                "networks_v4": [
+                    {
+                        "cidr": "212.230.0.0/15",
+                        "description": "Global ISP by PriorityTelecom Spain, S.A.",
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    },
+                    ...,
+                    {
+                        "cidr": "195.160.224.0/22",
+                        "description": null,
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    }
+                ],
+                "name": "Xtra Telecom S.A.",
+                "asn_date": "2011-05-13",
+                "asn_registry": "ripencc",
+                "networks_v6": [
+                    {
+                        "cidr": "2a01:8480::/32",
+                        "description": "MasMovil",
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    }
+                ],
+                "asn_country_code": "ES",
+                "country": "ES",
+                "asn": "15704"
+            }
+        },
+        {
+            "ip": "8.8.8.8",
+            "as": {
+                "asn_description": "GOOGLE - Google LLC, US",
+                "networks": [
+                    "8.8.4.0/24",
+                    "8.8.8.0/24",
+                    ...,
+                    "216.252.222.0/24"
+                ],
+                "networks_v4": [
+                    {
+                        "cidr": "66.249.64.0/20",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS15169",
+                        "updated": "noc@google.com 20110301"
+                    {
+                        "cidr": "104.132.222.0/24",
+                        "description": "ADDED FOR - AS15169",
+                        "maintainer": "I123-MNT",
+                        "updated": "rpd@123.net 20160516"
+                    }
+                ],
+                "name": "Google LLC",
+                "asn_date": "1992-12-01",
+                "asn_registry": "arin",
+                "networks_v6": [
+                    {                    {
+                        "cidr": "2a03:ace0::/32",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS15169",
+                        "updated": "jschiller@google.com 20160510  #16:41:45Z"
+                    },
+                    ...,
+                    {
+                        "cidr": "2604:31C0::/32",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS15169",
+                        "updated": "raybennett@google.com 20170412  #18:54:33Z"
+                    }
+                ],
+                "asn_country_code": "US",
+                "country": "US",
+                "asn": "15169"
+            }
+        },
+        {
+            "ip": "9.9.9.9",
+            "as": {
+                "asn_description": "QUAD9-AS-1 - Quad9",
+                "networks": [],
+                "networks_v4": [
+                    {
+                        "cidr": "216.58.198.0/24",
+                        "description": "Proxy-registered route object",
+                        "maintainer": "MAINT-AS3491",
+                        "updated": "sajwani@pccwbtn.com 20040404"
+                    },
+                    ...,
+                    {
+                        "cidr": "216.58.192.0/19",
+                        "description": "route register for foxcomm",
+                        "maintainer": "FOXCOMM-MNT",
+                        "updated": "michael.renner@level3.com 20031104"
+                    }
+                ],
+                "name": "QUAD9-AS-1 - Quad9",
+                "asn_date": "",
+                "asn_registry": "",
+                "networks_v6": [
+                    {
+                        "cidr": "2620:FE::/48",
+                        "description": "Quad9 - Global Public Recursive DNS Resolver Service",
+                        "maintainer": "MAINT-AS3856",
+                        "updated": "kabindra@pch.net 20171105"
+                    }
+                ],
+                "asn_country_code": "US",
+                "country": "US",
+                "asn": "19281"
+            }
+        }
+    ]
+}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated IP in the QueryString. She will get the information inside a JSON structure for each IP in the response. If the IP is not well formed it will return nothing for that IP, but will perform the lookup for the rest of the valid IP addresses:
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/as_batch/ip/<IP1>,<IP2>,...,<IPn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP1,IP2,...,IPn        | The list of IP addresses to lookup the AS in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a JSON structure with the IP adddress and its ''[asv2](#asv2)'' object.
+
+
+<aside class="warning">
+The maximum number of IP addresses to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
+</aside>
+
 ## Get the AS information from its number.
 
 > Get the AS data from its number:
@@ -2107,7 +2393,98 @@ as  | JSON structure containing the '[as](#as)' object.
 You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
 </aside>
 
-## Get the AS information from a set of AS numbers (Bulk Request).
+## Get the AS information from its number (V2.0)
+
+> Get the AS data from its number:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/as/num/19281"
+```
+
+>The response can be:
+
+```shell
+{
+    "as": {
+        "asn_description": "QUAD9-AS-1 - Quad9",
+        "networks": [],
+        "networks_v4": [
+            {
+                "cidr": "216.58.198.0/24",
+                "description": "Proxy-registered route object",
+                "maintainer": "MAINT-AS3491",
+                "updated": "sajwani@pccwbtn.com 20040404"
+            },
+            ...,
+            {
+                "cidr": "216.58.192.0/19",
+                "description": "route register for foxcomm",
+                "maintainer": "FOXCOMM-MNT",
+                "updated": "michael.renner@level3.com 20031104"
+            }
+        ],
+        "name": "QUAD9-AS-1 - Quad9",
+        "asn_date": "",
+        "asn_registry": "",
+        "networks_v6": [
+            {
+                "cidr": "2620:FE::/48",
+                "description": "Quad9 - Global Public Recursive DNS Resolver Service",
+                "maintainer": "MAINT-AS3856",
+                "updated": "kabindra@pch.net 20171105"
+            }
+        ],
+        "asn_country_code": "US",
+        "country": "US",
+        "asn": "19281"
+    }
+}
+```
+
+This endpoint returns a JSON structure that includes all the information in Version 1 of the API endpoint about the Autonomous System that owns the IP, and information about its networks.  The request always returns the status code 200 (HTTP OK) if the IP exists. If the IP is malformed it will return a 400 (HTTP Bad Request) code.
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/as/num/<NUMBER>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | Yes | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+NUMBER    | The Number of the AS to look up in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+as  | JSON structure containing the '[asv2](#asv2)' object.
+
+
+<aside class="warning">
+You should double check that the endpoint of the URL is correct, since a wrong URL can return a 404 error too.
+</aside>
+
+## Bulk Request - Get the AS information from a set of AS numbers (V1.0).
 
 > Get the AS data from a set of AS numbers:
 
@@ -2123,43 +2500,35 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/as_batch/num/1570
         {
             "asn": "15704",
             "as": {
-                "country": "ES",
-                "asn": "15704",
                 "networks": [
                     "31.222.80.0/20",
-                    "46.6.0.0/18",
-                    ...
-                    "213.195.96.0/19"
+                    ...,
+                    "217.113.240.0/20"
                 ],
-                "name": "AS15704"
+                "name": "Xtra Telecom S.A.",
+                "country": "ES",
+                "asn": "15704"
             }
         },
         {
             "asn": "3352",
             "as": {
-                "country": "ES",
-                "asn": "3352",
                 "networks": [
                     "2.136.0.0/16",
-                    "2.137.0.0/16",
-                    ...
+                    ...,
                     "217.127.0.0/16"
                 ],
-                "name": "TELEFONICA_DE_ESPANA"
+                "name": "Telefonica De Espana",
+                "country": "ES",
+                "asn": "3352"
             }
         },
         {
             "asn": "15169",
             "as": {
+                "name": "Google LLC",
                 "country": "US",
-                "asn": "15169",
-                "networks": [
-                    "8.8.4.0/24",
-                    "8.8.8.0/24",
-                    ...
-                    "216.252.222.0/24"
-                ],
-                "name": "GOOGLE - Google LLC"
+                "asn": "15169"
             }
         }
     ]
@@ -2210,6 +2579,193 @@ response  | JSON structure containing a list of JSON structures with the AS numb
 The maximum number of AS numbers to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
+## Bulk Request - Get the AS information from a set of AS numbers (V2.0).
+
+> Get the AS data from a set of AS numbers:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/as_batch/num/15704,3352,15169"
+```
+
+>The response can be:
+
+```shell
+{
+    "response": [
+        {
+            "asn": "15704",
+            "as": {
+                "asn_description": "AS15704, ES",
+                "networks": [
+                    "31.222.80.0/20",
+                    ...,
+                    "217.113.240.0/20"
+                ],
+                "networks_v4": [
+                    {
+                        "cidr": "212.230.0.0/15",
+                        "description": "Global ISP by PriorityTelecom Spain, S.A.",
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    },
+                    ...,
+                    {
+                        "cidr": "195.160.224.0/22",
+                        "description": null,
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    }
+                ],
+                "name": "Xtra Telecom S.A.",
+                "asn_date": "2011-05-13",
+                "asn_registry": "ripencc",
+                "networks_v6": [
+                    {
+                        "cidr": "2a01:8480::/32",
+                        "description": "MasMovil",
+                        "maintainer": "MUNDI-MNT",
+                        "updated": null
+                    }
+                ],
+                "asn_country_code": "ES",
+                "country": "ES",
+                "asn": "15704"
+            }
+        },
+        {
+            "asn": "3352",
+            "as": {
+                "asn_description": "TELEFONICA_DE_ESPANA, ES",
+                "networks": [
+                    "2.136.0.0/16",
+                    ...,
+                    "217.127.0.0/16"
+                ],
+                "networks_v4": [
+                    {
+                        "cidr": "194.179.0.0/17",
+                        "description": "TDENET (Red de servicios IP)",
+                        "maintainer": "MAINT-AS3352",
+                        "updated": null
+                    },
+                    ...,
+                    {
+                        "cidr": "212.170.0.0/17",
+                        "description": "Proxy-registered route object",
+                        "maintainer": "LEVEL3-MNT",
+                        "updated": "roy@Level3.net 20070810"
+                    }
+                ],
+                "name": "Telefonica De Espana",
+                "asn_date": "2010-11-05",
+                "asn_registry": "ripencc",
+                "networks_v6": [
+                    {
+                        "cidr": "2a02:9000::/23",
+                        "description": "ES-TELEFONICA-20110302",
+                        "maintainer": "MAINT-AS3352",
+                        "updated": null
+                    }
+                ],
+                "asn_country_code": "ES",
+                "country": "ES",
+                "asn": "3352"
+            }
+        },
+        {
+            "asn": "15169",
+            "as": {
+                "asn_description": "GOOGLE - Google LLC, US",
+                "networks": [
+                    "8.8.4.0/24",
+                    ...,
+                    "216.252.222.0/24"
+                ],
+                "networks_v4": [
+                    {
+                        "cidr": "66.249.64.0/20",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS15169",
+                        "updated": "noc@google.com 20110301"
+                    },
+                    ...,
+                    {
+                        "cidr": "104.132.222.0/24",
+                        "description": "ADDED FOR - AS15169",
+                        "maintainer": "I123-MNT",
+                        "updated": "rpd@123.net 20160516"
+                    }
+                ],
+                "name": "Google LLC",
+                "asn_date": "1992-12-01",
+                "asn_registry": "arin",
+                "networks_v6": [
+                    {
+                        "cidr": "2401:fa00::/42",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS36385",
+                        "updated": "noc@google.com 20100512"
+                    },
+                    ...,
+                    {
+                        "cidr": "2604:31C0::/32",
+                        "description": "Google",
+                        "maintainer": "MAINT-AS15169",
+                        "updated": "raybennett@google.com 20170412  #18:54:33Z"
+                    }
+                ],
+                "asn_country_code": "US",
+                "country": "US",
+                "asn": "15169"
+            }
+        }
+    ]
+}
+```
+
+A developer can save time and rate-limit restrictions if she passes a list of comma separated AS numbers in the QueryString. She will get the information inside a JSON structure for each AS number in the response. If the AS Number is not a correct number or the AS does not exist it will return nothing for it, but will perform the lookup for the rest of the valid AS numbers:
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/as_batch/num/<NUM1>,<NUM2>,...,<NUMn>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+Accept | No | application/json
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+NUMBER    | The Number of the AS to look up in the system.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return the following JSON:
+
+Parameter | Description
+--------- | -----------
+response  | JSON structure containing a list of JSON structures with the AS number and its '[asv2](#asv2)' object.
+
+
+<aside class="warning">
+The maximum number of AS numbers to resolve per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
+</aside>
 
 # Quarantined Objects
 
@@ -3983,7 +4539,34 @@ Parameter     | Description
 asn | AS number
 name | name of the AS
 country | ISO 3166-1 Country code
-networks | Array with the lists of networks of the AS
+networks | Array with the lists of networks of the AS obtained from BGP tables.
+
+## asv2
+
+The AS object contains the information of Autonmous System for the v2.0 of the API endpoint.
+
+Parameter     | Description
+------------- | -----------
+asn | AS number
+name | name of the AS
+asn_description | Full description of the AS
+asn_date | Date when the AS was registered
+asn_registry | Local registry that maintains the AS information.
+country | ISO 3166-1 Country code
+networks | Array with the lists of networks of the AS obtained from BGP tables.
+networks_v4 | Array with the lists of ipv4 cidr information. See [AS_NETWORK](#as-network) object.
+networks_v6 | Array with the lists of ipv6 cidr information. See [AS_NETWORK](#as-network) object.
+
+## as-network
+
+The AS object that contains the information of the CIDR block and the maintainer.
+
+Parameter     | Description
+------------- | -----------
+cidr | IPv4 or IPv6 prefix of a block managed by the AS.
+description | Human readable description of the object.
+maintainer | Who is the maintainer of the object. It can reference other AS or itself.
+updated | Who made the last change and when.
 
 ## domainname score
 
