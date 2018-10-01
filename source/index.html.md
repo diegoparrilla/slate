@@ -1039,6 +1039,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds.
 quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
 quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
@@ -1090,7 +1091,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
          "exist_mx":true,
          "score":0,
          "exist_address":false,
-         "exist_catchall":false
+         "exist_catchall":false,
+         "graylisted":false,
+         "timedout":false
       },
       "freemail":{
          "score":0,
@@ -1173,7 +1176,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
          "exist_mx":true,
          "score":0,
          "exist_address":false,
-         "exist_catchall":false
+         "exist_catchall":false,
+         "graylisted":false,
+         "timedout":false
       },
       "freemail":{
          "score":0,
@@ -1248,6 +1253,7 @@ Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
 callback | No | Function to invoke when using JSONP model.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds. If the process timesout then the JSON returns True in smtp>timedout.
 quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
 quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
 
@@ -1293,7 +1299,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
                     "score": 0,
                     "exist_address": false,
                     "exist_mx": true,
-                    "exist_catchall": false
+                    "exist_catchall": false,
+                    "graylisted":false,
+                    "timedout":false
                 },
                 "domain": {
                     "score": 0,
@@ -1351,7 +1359,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
                     "score": 0,
                     "exist_address": false,
                     "exist_mx": true,
-                    "exist_catchall": false
+                    "exist_catchall": false,
+                    "graylisted":false,
+                    "timedout":false
                 },
                 "domain": {
                     "score": 0,
@@ -1409,7 +1419,9 @@ $ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api
                     "score": 1,
                     "exist_address": true,
                     "exist_mx": true,
-                    "exist_catchall": false
+                    "exist_catchall": false,
+                    "graylisted":false,
+                    "timedout":false
                 },
                 "domain": {
                     "score": -1,
@@ -1492,6 +1504,7 @@ Accept | No | application/json
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
 token | No | API Key of the owner.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds. If the process timesout then the JSON returns True in smtp>timedout.
 callback | No | Function to invoke when using JSONP model.
 
 ### URL Parameters
@@ -4612,6 +4625,8 @@ score | Number describing the result of the algorithm. Negative means 'suspiciou
 exist_mx | The SMTP service is reachable using the hosts in the MX records.
 exist_address | The SMTP service recognizes the email address.
 exist_catchall | The SMTP service implements a catch-all email feature.
+graylisted | The SMTP service implements a graylisting feature, so the data in this object should be analyzed before considering it valid.
+timedout | The SMTP service timed out before completing all the tests. Hence, the data in this object should be considered not valid.
 
 ## freemail score
 
