@@ -315,9 +315,17 @@ Paid plans can configure the allowed referers site to prevent unauthorized use a
 
 Paid plans can restrict the source IP of the requests to prevent unauthorized use and quota theft. You can test this feature during the 30 days trail period.
 
+## Consuming the API with libraries and tools.
+
+There are several tools and libraries created to consume the API directly with extensions to Google Spreadsheet, Python libraries or command line tools. You can learn more about all these options in the [Tools and Services section](https://apility.io/docs/category/tools-services/) of our documentation.
+
 # IP Check
 
 Apility.io tracks multiple abuse blacklists and consolidates them in a single database you can look up with our minimalist API.
+
+<aside class="warning">
+Each IP Check request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>.
+</aside>
 
 ## Check if an IP belongs to any abusers' blacklist
 
@@ -519,6 +527,139 @@ response | Array with a list with the blacklists for each IP.
 The maximum number of IP per bulk request is 1000. The service will return a 400 error code (Bad Request) for arrays larger than 1000.
 </aside>
 
+
+# Full IP address reputation
+
+From API version 2.0 a new endpoint has been added that allows to obtain a score of an IP address not only studying if it is in a black list. Also the following checks are made:
+
+* A reverse DNS lookup is performed and a hostname is obtained. The service checks if the domain is in any blacklist.
+* Check if the IP address was in any blacklist in the past. The service checks the historical information of the IP address.
+
+These three checks -IP address blacklist, Domain blacklist and IP address historical blacklist- are summarized and returned as a global score for the IP address.
+
+This API call also returns detailed information about the IP address from different sources:
+
+* IP Geolocation
+* AS information
+* WHOIS informaton
+* Reverse DNS lookup to obtain the Hostname
+* Blacklists where the IP address was found (if any).
+* Blacklists where the Hostname was found (if any).
+* IP address historical activity: what blacklists did the IP address was found in?
+
+<aside class="success">
+This is a free and paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+<aside class="warning">
+Each Full IP address reputation request consumes <a href="https://apility.io/docs/difference-hits-requests/">5 hits</a>. You can save some quota using this request instead of making different request to different services.
+</aside>
+
+## Get full IP address reputation info
+
+```shell
+$ curl -H "Accept: application/json" -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/ip/<IP>"
+```
+
+>The response can be:
+
+```shell
+{
+    "fullip": {
+        "geo": { ... },
+        "hostname": "abts-tn-static-035.5.165.122.airtelbroadband.in",
+        "baddomain": {
+            "domain": {
+                "blacklist": [],
+                "blacklist_mx": [],
+                "blacklist_ns": [],
+                "mx": [],
+                "ns": [],
+                "score": 0
+            },
+            "ip": {
+                "address": "",
+                "blacklist": "",
+                "is_quarantined": false,
+                "score": 0
+            },
+            "source_ip": {
+                "address": "71.152.251.222",
+                "blacklist": [],
+                "is_quarantined": false,
+                "score": 0
+            },
+            "score": 0
+        },
+        "badip": {
+            "score": 0,
+            "blacklists": []
+        },
+        "history": {
+            "score": -1,
+            "activity": [
+                {
+                    "ip": "122.165.5.35",
+                    "timestamp": 1537000113218,
+                    "command": "rem",
+                    "blacklists": "",
+                    "blacklist_change": "UCEPROTECT-LEVEL1"
+                },
+                ...
+            ],
+            "score_1day": false,
+            "score_7days": false,
+            "score_30days": true,
+            "score_90days": true,
+            "score_180days": true,
+            "score_1year": true
+        },
+        "score": -1,
+        "whois": { ... }
+    }
+}
+```
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/ip/<IP>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+timestamp | No | UNIX time in seconds to filter the search in the database. If ignored, then current UNIX time is taken.
+page | No | Page number to paginate the result. Always start at 1. If ignored, then search for page one.
+items | No | Number of items per page. Can be in the range of 5 to 200. If ignored, then return 5 items.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+IP | The IP to look up in the system.
+
+### Response
+
+The status code of the response will be a 200 HTTP code if everything is ok and it will also return the following JSON structure.:
+
+Parameter | Description
+--------- | -----------
+fullip | '[FullIP](#fullip)' JSON object cointaining all the information gathered from the different sources.
+
+
+
 # Domain Check
 
 Domain check implements an algorithm that assigns a score to the domain based on several checks done by the system:
@@ -529,6 +670,10 @@ Domain check implements an algorithm that assigns a score to the domain based on
 * Is the IP of domain in any of the IP blacklists?
 
 By default if some of these tests success, a -1 score is added to the overall score of the domain. So an overall score of -3 means the chances of being a bad domain are higher than -1.
+
+<aside class="warning">
+Each Domain check request consumes <a href="https://apility.io/docs/difference-hits-requests/">5 hit</a>.
+</aside>
 
 ## Check if a domain scores a negative or neutral score.
 
@@ -979,6 +1124,10 @@ Email check implements an algorithm as a superset of the used for the domain ana
 * Is the email well formed?
 
 By default if some of these tests success, a -1 score is added to the overall score of the email. So an overall score of -3 means the chances of being a bad email are higher than -1.
+
+<aside class="warning">
+Each Email Check request consumes <a href="https://apility.io/docs/difference-hits-requests/">10 hits</a>.
+</aside>
 
 ## Check if an email scores a negative or neutral score.
 
@@ -1545,6 +1694,9 @@ This service returns the geo location of any IP with relevant information like:
 
 This API request will always return a JSON structure with the information and a 200 HTTP code if the IP can be found in the database. If not, then it will return a 404 HTTP code as usual.
 
+<aside class="warning">
+Each Geo IP look up request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>. You can save some quota using this request instead of making different request to different services.
+</aside>
 
 ## Get IP geo location.
 
@@ -1895,9 +2047,11 @@ Version 2.0 adds to all these fields more information:
 * IPv4 Networks with the maintainers and last update.
 * IPv6 Networks with the maintainers and last update.
 
-
 This API request will always return a JSON structure with the information and a 200 HTTP code if the IP or AS number can be found in the system. If not, then it will return a 404 HTTP code as usual.
 
+<aside class="warning">
+Each Autonomous System look up request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>.
+</aside>
 
 ## Get the AS information from an IP (V1.0).
 
@@ -3829,21 +3983,6 @@ You always have to pass the API key because quarantine needs to identify as a va
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Resource History
 
 Our databases contain several million active records of IP addresses, domains and emails. But this is just the tip of the iceberg because every day we process more than a million transactions on this database. A resource such as an IP address can enter and exit a blocking list on multiple occasions, which added to the fact that it can enter and exit different lists at the same time allows our users to get an idea of the magnitude of the information we handle.
@@ -3869,6 +4008,12 @@ Every call made to the API will count as a new HIT in the quota of the user.
 <aside class="success">
 This is a free and paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
+
+<aside class="warning">
+Each Resource History request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>.
+</aside>
+
+
 
 ## Get IP address history
 
@@ -4173,14 +4318,6 @@ Parameter | Description
 changes_email  | JSON object containing a list of JSON '[transaction email](#transaction-email)' objects.
 
 
-
-
-
-
-
-
-
-
 # WHOIS query
 
 WHOIS is a query and response protocol that is widely used for querying databases that store the registered users or assignees of an Internet resource, such as a domain name, an IP address block, or an autonomous system, but is also used for a wider range of other information. The protocol stores and delivers database content in a human-readable format. The WHOIS protocol is documented in RFC 3912.
@@ -4194,7 +4331,10 @@ The resources currently available are (more in the future):
 
 The API call will try to return the WHOIS information of the resource cached in our databases. If the cache has expired or the resource is not cached then it will perform a rountrip to the Regional Internet Registry (RIR) to which the resource belongs.
 
-Every call made to the API will count as a new HIT in the quota of the user.
+<aside class="warning">
+Each WHOIS query request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>.
+</aside>
+
 
 ## Lookup WHOIS IP address
 
@@ -4489,6 +4629,15 @@ whois  | JSON object containing all the information returned by the RIR '[whois]
 
 # Objects
 
+## IP
+
+The ip score contains the information of looking up the IP in the blacklists.
+
+Parameter     | Description
+------------- | -----------
+score | Number describing the result of the algorithm. Negative means 'suspicious' or 'bad' IP. Neutral or positive means it's a 'clean' IP.
+blacklist | Array containing the blacklists where the IP was found.
+
 ## domain
 
 The domain object contains the information used in the scoring algorithm.
@@ -4781,3 +4930,31 @@ title	|	The title/header for a notice.
 description	|	The description/body of a notice.
 links	|	list of HTTP/HTTPS links provided for a notice.
 
+## fullip
+
+Information gathered from different sources to describe the reputation of the IP Address.
+
+Parameter     | Description
+------------- | -----------
+geo	|	IP Geolocation object as described in [GeoIP](#geoip)
+hostname	|	String with the name of a hostname result of a reverse DNS lookup on the IP Address.
+baddomain	|	The [Domain](#domain) object contains the information obtained in the scoring algorithm of the hostname.
+badip  |   The [IP](#ip) object contains the information obtained in the scoring algorithm of the IP address.
+history | List of transactions as objects [History IP](#history-ip) in the IP address blacklist database and the scoring.
+whois | Full WHOIS information as described in the object [WHOIS](#whois)
+score | Number describing the result of summarizing each individual scores.
+
+## history ip
+
+List of transactions in the blacklist database and the scoring based on when it was inserted.
+
+Parameter     | Description
+------------- | -----------
+score | Number describing the result of the algorithm. Negative means the IP was add to any blacklist in the specified time range.
+activity | List of [Transaction IP](#transaction-ip) objects with the activity in the database.
+score_1day | True if the IP was added in any blacklist in the last 24 hours.
+score_7days | True if the IP was added in any blacklist in the last 7 days.
+score_30days | True if the IP was added in any blacklist in the last 30 days.
+score_90days | True if the IP was added in any blacklist in the last 90 days.
+score_180days | True if the IP was added in any blacklist in the last 180 days.
+score_1year | True if the IP was added in any blacklist in the last 365 days.
