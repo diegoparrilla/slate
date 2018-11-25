@@ -4594,7 +4594,6 @@ $ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/whois/ip/<IP>"
 }
 ```
 
-
 The whois JSON object contains all the information returned by the RIR about the object. See a full description of the objet whois.
 
 
@@ -4625,6 +4624,357 @@ If everything goes fine then it will also return the following JSON object:
 Parameter | Description
 --------- | -----------
 whois  | JSON object containing all the information returned by the RIR '[whois](#whois)' object.
+
+# Apility API metadata
+
+Metadata services allow developers to access internal information about Apility.io service blacklists, databases, and repositories.
+
+Among the data that can be obtained to metadata calls are:
+
+* List of all blacklists of IP addresses (badip).
+* List of all blacklists of Domain addresses (baddomain).
+* List of all blacklists of Email addresses (bademail).
+* Detail of a blacklist of type badip.
+* Detail of a blacklist of type baddomain.
+* Detail of a blacklist of type bademail.
+* Sum of all elements of badip, domain and bademail.
+
+
+This API request will always return a JSON structure with the information and a 200 HTTP code if the list can be found in the database. If not, then it will return a 404 HTTP code as usual.
+
+<aside class="warning">
+Each metadata request consumes <a href="https://apility.io/docs/difference-hits-requests/">1 hit</a>.
+</aside>
+
+## List of all blackists by type.
+
+> Get the list of blacklists type badip:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/badip/lists"
+```
+
+>The response can be:
+
+```shell
+{
+    "NIXSPAM-IP": {
+        "group": "abuse",
+        "refresh": "Every 15 minutes",
+        "last_update": "1543164604",
+        "visibility": "Public",
+        "site": "http://www.nixspam.org",
+        "type": "badip",
+        "description": "The iX blacklist is made of over 500,000 automatically generated entries per day without distinguishing open proxies from relays, dialup gateways, and so on. After 12 hours the IP address will be removed if there is no new spam from there.",
+        "source": "NiX Spam IP DNSBL and blacklist",
+        "name": "NiX Spam IP blacklist",
+        "count": "40645",
+        "problem": "It lists any active address instantly whilst removing older entries. That's the idea of the iX blacklist.",
+        "enabled": "True"
+    },
+    ...
+    ,
+    "ZEUS-BADIP-IP": {
+        "group": "abuse",
+        "refresh": "Every 60 minutes",
+        "last_update": "1543163417",
+        "visibility": "Public",
+        "site": "https://zeustracker.abuse.ch",
+        "type": "badip",
+        "description": "ZeuS Tracker offers various IP-blocklists that contains known ZeuS Command&Control server (C&C) assocaited with the ZeuS crimeware. ZeuS Tracker offers blocklists in various formats and for different purposes.",
+        "source": "ZEUS-BADIP-IP Blacklist - IP of ZeuS Command&Control",
+        "name": "ZEUS-BADIP-IP Blacklist - IP of ZeuS Command&Control",
+        "count": "107",
+        "problem": "This blocklists only includes IPv4 addresses that are used by the ZeuS trojan. It is the recommened blocklist if you want to block only ZeuS IPs. It excludes IP addresses that ZeuS Tracker believes to be hijacked (level 2) or belong to a free web hosting provider (level 3). Hence the false postive rate should be much lower compared to the standard ZeuS Standard IP blocklist.",
+        "enabled": "True"
+    }
+}
+```
+
+> Get the list of blacklists type baddomain:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/baddomain/lists"
+```
+
+>The response can be:
+
+```shell
+{
+    "FREEMAIL": {
+        "group": "anonymizer",
+        "refresh": "Everyday",
+        "last_update": "1543164938",
+        "visibility": "Public",
+        "site": "",
+        "type": "baddomain",
+        "description": "Free email services give users the ability to send and receive emails plus more services like a calendar, instant messaging and mobile apps for your smartphone, among other features that can be beneficial for individuals. These services can be free of charge or advertised supported, and this is what makes them suitable for users that want to hide their identity using multiple free email accounts.",
+        "source": "Several sources.",
+        "name": "Free Email Providers blacklist",
+        "count": "4317",
+        "problem": "Free email can be used to mask the identities of abusers, but free email users cannot be classified as abusers by default. Still, some companies reject to accept free email addresses when registering.",
+        "enabled": "True"
+    },
+    ...
+    ,
+    "ETHERSCAMDB-DOMAINS": {
+        "group": "anonymizer",
+        "refresh": "Everyday",
+        "last_update": "1543118542",
+        "visibility": "Public",
+        "site": "https://etherscamdb.info",
+        "type": "baddomain",
+        "description": "Ethereum Scam Database or EtherScamDB is an open source project and website that combines all the information that's available. It also has an easy to use reporting function and add them to the database.",
+        "source": "Github EtherScamDB account.",
+        "name": "Ethereum Scam Database Domain blacklist",
+        "count": "6059",
+        "problem": "There is a lot of bad guys out there that will try to steal your cryptocurrencies using fake domains. This list will help you to avoid them.",
+        "enabled": "True"
+    }
+}
+```
+
+> Get the list of blacklists type bademail:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/bademail/lists"
+```
+
+>The response can be:
+
+```shell
+{
+    "STOPFORUMSPAM-90": {
+        "group": "abuse",
+        "refresh": "Every day",
+        "last_update": "1543115919",
+        "visibility": "Public",
+        "site": "http://www.stopforumspam.com",
+        "type": "bademail",
+        "description": "StopForumSpamprovide lists of spammers that persist in abusing forums and blogs with their scams, ripoffs, exploits and other annoyances*. They provide these lists so that you don't have to endure the never ending job of having to moderate, filter and delete their rubbish. Stop Forum Spam is one of the biggest and more detailed list of abusers.",
+        "source": "StopForumSpam 90 days Email blacklist",
+        "name": "StopForumSpam Email 90d",
+        "count": "574535",
+        "problem": "Emails in this list includes new entries in the main list in the last 90 days.",
+        "enabled": "True"
+    },
+    ...
+    ,
+    "STOPFORUMSPAM-7": {
+        "group": "abuse",
+        "refresh": "Every day",
+        "last_update": "1543115779",
+        "visibility": "Public",
+        "site": "http://www.stopforumspam.com",
+        "type": "bademail",
+        "description": "StopForumSpamprovide lists of spammers that persist in abusing forums and blogs with their scams, ripoffs, exploits and other annoyances*. They provide these lists so that you don't have to endure the never ending job of having to moderate, filter and delete their rubbish. Stop Forum Spam is one of the biggest and more detailed list of abusers.",
+        "source": "StopForumSpam 7 days Email blacklist",
+        "name": "StopForumSpam Email 7d",
+        "count": "56253",
+        "problem": "Emails in this list includes new entries in the main list in the last 7 days.",
+        "enabled": "True"
+    }
+}
+```
+
+This endpoint returns a JSON structure with a list of blacklist objects information indexed by the list Id. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint does not need API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+BLACKLIST_TYPE | The blacklist type: badip, baddomain or bademail.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with a list of blacklist Id names and its '[blacklist](#blacklist)' object.
+
+## Get full details of a blacklist
+
+> Get the details of a blacklist by type badip and blacklist id:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/badip/lists/NIXSPAM-IP"
+```
+
+>The response can be:
+
+```shell
+{
+        "group": "abuse",
+        "refresh": "Every 15 minutes",
+        "last_update": "1543164604",
+        "visibility": "Public",
+        "site": "http://www.nixspam.org",
+        "type": "badip",
+        "description": "The iX blacklist is made of over 500,000 automatically generated entries per day without distinguishing open proxies from relays, dialup gateways, and so on. After 12 hours the IP address will be removed if there is no new spam from there.",
+        "source": "NiX Spam IP DNSBL and blacklist",
+        "name": "NiX Spam IP blacklist",
+        "count": "40645",
+        "problem": "It lists any active address instantly whilst removing older entries. That's the idea of the iX blacklist.",
+        "enabled": "True"
+}
+```
+
+> Get the details of a blacklist by type baddomain and blacklist id:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/baddomain/lists/FREEMAIL"
+```
+
+>The response can be:
+
+```shell
+{
+        "group": "anonymizer",
+        "refresh": "Everyday",
+        "last_update": "1543164938",
+        "visibility": "Public",
+        "site": "",
+        "type": "baddomain",
+        "description": "Free email services give users the ability to send and receive emails plus more services like a calendar, instant messaging and mobile apps for your smartphone, among other features that can be beneficial for individuals. These services can be free of charge or advertised supported, and this is what makes them suitable for users that want to hide their identity using multiple free email accounts.",
+        "source": "Several sources.",
+        "name": "Free Email Providers blacklist",
+        "count": "4317",
+        "problem": "Free email can be used to mask the identities of abusers, but free email users cannot be classified as abusers by default. Still, some companies reject to accept free email addresses when registering.",
+        "enabled": "True"
+}
+```
+
+> Get the details of a blacklist by type bademail and blacklist id:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/bademail/lists/STOPFORUMSPAM-90"
+```
+
+>The response can be:
+
+```shell
+{
+        "group": "abuse",
+        "refresh": "Every day",
+        "last_update": "1543115919",
+        "visibility": "Public",
+        "site": "http://www.stopforumspam.com",
+        "type": "bademail",
+        "description": "StopForumSpamprovide lists of spammers that persist in abusing forums and blogs with their scams, ripoffs, exploits and other annoyances*. They provide these lists so that you don't have to endure the never ending job of having to moderate, filter and delete their rubbish. Stop Forum Spam is one of the biggest and more detailed list of abusers.",
+        "source": "StopForumSpam 90 days Email blacklist",
+        "name": "StopForumSpam Email 90d",
+        "count": "574535",
+        "problem": "Emails in this list includes new entries in the main list in the last 90 days.",
+        "enabled": "True"
+}
+```
+
+This endpoint returns a JSON structure with a list of blacklist objects information indexed by the list Id. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint does not need API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+BLACKLIST_TYPE | The blacklist type: badip, baddomain or bademail.
+BLACKLIST_ID | The alphanumeric blacklist id.
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with a list of blacklist Id names and its '[blacklist](#blacklist)' object.
+
+## Get statistics of all the blacklists
+
+> Get the statistics of all the blacklists:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata"
+```
+
+>The response can be:
+
+```shell
+{
+    "badip": {
+        "items": 1313983954,
+        "lists": 102
+    },
+    "baddomain": {
+        "items": 318413,
+        "lists": 25
+    },
+    "bademail": {
+        "items": 4677067,
+        "lists": 6
+    }
+}
+```
+
+This endpoint returns a JSON structure with a list of blacklist objects information indexed by the list Id. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint does not need API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with an '[blackliststats](#blackliststats)' object.
 
 
 # Objects
@@ -4958,3 +5308,41 @@ score_30days | True if the IP was added in any blacklist in the last 30 days.
 score_90days | True if the IP was added in any blacklist in the last 90 days.
 score_180days | True if the IP was added in any blacklist in the last 180 days.
 score_1year | True if the IP was added in any blacklist in the last 365 days.
+
+## blacklist
+
+Details about a given blacklist.
+
+Parameter     | Description
+------------- | -----------
+group | Sub-group to classify the blacklists.
+refresh | How often the list is updated. It's a human readable text.
+last_update | When was the last time the blacklist was updated. Expressed in seconds since 00:00:00 UTC, 1 January 1970 (Unix Time).
+visibility | If this list is Public or Private.
+site | The website or internet endpoint where the list was obtained.
+type | Blacklist type: badip, baddomain or bademail.
+description | A human readable description of what is this list and its purpose.
+source | Generic name of the data source.
+name | Human readable name of the list.
+count | Number of items in the list.
+problem | A human readable description of why a user should use the list.
+enabled | Internal information. Should always be Enabled for end users.
+
+## blackliststats
+
+Statistics of the blacklists.
+
+Parameter     | Description
+------------- | -----------
+badip | A [blackliststatsinfo](#blackliststatsinfo) object with the number of items and lists of type badip.
+baddomain | A [blackliststatsinfo](#blackliststatsinfo) object with the number of items and lists of type baddomain.
+bademail | A [blackliststatsinfo](#blackliststatsinfo) object with the number of items and lists of type bademail.
+
+## blackliststatsinfo
+
+Information detail of the blacklists statistics.
+
+Parameter     | Description
+------------- | -----------
+items | Number of items in the chosen type.
+lists | Number of lists in the chosen type.
