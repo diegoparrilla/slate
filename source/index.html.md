@@ -93,14 +93,11 @@ When you perform a request to this endpoint, thanks to the magic of DNS Anycast 
 
 The access to the API has been developed to be simple, minimalistic and fast. We have followed the Keep it Simple (KISS) approach, with several different ways to access the data.
 
-[To use the API you will need a API Key or Token](https://apility.io/docs/step-2-api-key/) that you will pass along your request. [You need to sign up to get it](https://dashboard.apility.io/#/register), and yes, there is a free plan you can use as long as you want.
+[To use the API you will need a API Key or Token](https://apility.io/docs/step-2-api-key/) that you will pass along your request. [You need to sign up to get it](https://dashboard.apility.io/#/register).
 
-API is restricted by this API Key. Each subscription plan is [limited to a number of API requests per day](https://apility.io/docs/difference-hits-requests/). If you exceed that limit in a 24 hour period the service will return a 429 HTTP status code. If you need to make more requests you should consider a paid plan with more quota. You can know in real time the quota consumed daily from the Dashboard.
+API is restricted by this API Key. The access is [limited to a number of API requests per day](https://apility.io/docs/difference-hits-requests/). If you exceed that limit in a 24 hour period the service will return a 429 HTTP status code. If you need to make more requests you should consider contact us and tell us why you need a higher limit. You can know in real time the quota consumed daily from the Dashboard.
 
 There is also an ANONYMOUS PLAN. The platform applies this plan if a developer does not pass any API Token when doing a request. So you can test the API right way before signing up!
-
-Please read more details about [Plans, Pricing and limits by day and hour](https://apility.io/docs/step-4-plans-pricing/)
-
 
 ## The Administration Dashboard
 
