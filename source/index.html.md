@@ -4973,6 +4973,228 @@ callback | No | Function to invoke when using JSONP model.
 
 The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with an '[blackliststats](#blackliststats)' object.
 
+# Apility API account information
+
+Account information services allow developers to get read-only about the existing quota, the active blacklists and the configuration of the services.
+
+The information that can be obtained is:
+
+* Number of hits consumed in the existing 24 hour period.
+* Time To Live (TTL) until the existing 24 hour period expires.
+* Active blacklists of IP addresses.
+* Active blacklists of Domains.
+* Internal parameters configuration.
+* Source IP or Header restrictions.
+
+
+This API request will always return a JSON structure with the information and a 200 HTTP code if the API TOKEN belongs to an active user. If not, then it will return a:
+* 401 HTTP Unauthorized if no API KEY is passed or API KEY is well formed but not recognized (user does not exists), for example doing an anonymous request.
+* 400 HTTP Bad Request if the API KEY passed is malformed.
+
+
+## Get the current number of hits and TTL.
+
+> Get the current number of hits and TTL:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/account/quota"
+```
+
+>The response can be:
+
+```shell
+{
+    "hits": 70876, 
+    "ttl": 2628
+}
+```
+
+This endpoint returns a JSON structure with the number of hits consumed in the current 24 hour period, and the Time to Live until the quota is restarted after this 24 hout period. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint needs API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/account/quota`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | Yes | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | Yes | API Key of the owner.
+
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with a 'hits' and 'ttl' objects. 'ttl' is measured in seconds.
+
+## Get the active blacklists.
+
+> Get the active blacklists:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/account/blacklists"
+```
+
+>The response can be:
+
+```shell
+{ 
+   "ip_addresses":[ 
+      "ALIENVAULT-REPUTATION",
+      "BBCAN177-MS1",
+      "BBCAN177-MS3",
+      "BLOCKLISTNET-UA",
+      "BOTSCOUT-1D",
+      "BOTSCOUT-30D",
+      "BOTSCOUT-7D",
+      "BOTSCOUT-LATEST",
+      "BRUTEFORCEBLOCKER",
+      "CLEANTALK-ORG-1D",
+      "CLEANTALK-ORG-30D",
+      "CLEANTALK-ORG-7D",
+      "CLEANTALK-ORG-LATEST",
+      "DEA-IP",
+      "EXPRESSVPN-EXIT-IP",
+      "FAIL2BAN-APACHE",
+      "FAIL2BAN-BOTS",
+      "FAIL2BAN-BRUTEFORCELOGIN",
+      "FAIL2BAN-FTP",
+      "FAIL2BAN-IMAP",
+      "FAIL2BAN-IRCBOT",
+      "FAIL2BAN-MAIL",
+      "FAIL2BAN-SIP",
+      "FAIL2BAN-SSH",
+      "FAIL2BAN-STRONGIPS",
+      "IDCLOACK-COM-1D",
+      "IDCLOACK-COM-30D",
+      "IDCLOACK-COM-7D",
+      "IDCLOACK-COM-LATEST",
+      "IPVANISHVPN-EXIT-IP",
+      "IVOLO-DED-IP",
+      "LISINGE-DED-IP",
+      "MARTENSON-DED-IP",
+      "NIXSPAM-IP",
+      "NORDVPN-EXIT-IP",
+      "SPYS-ONE-1D",
+      "SPYS-ONE-30D",
+      "SPYS-ONE-7D",
+      "SPYS-ONE-LATEST",
+      "SSLBL-IP",
+      "STOPFORUMSPAM-1",
+      "STOPFORUMSPAM-30",
+      "STOPFORUMSPAM-7",
+      "STOPFORUMSPAM-90",
+      "TOP100-LATEST-IP",
+      "TOR",
+      "TOR-BLUTMAGIE-FULL",
+      "UCEPROTECT-BACKSCATTERER",
+      "UCEPROTECT-LEVEL1",
+      "ZEUS-BADIP-IP",
+      "ZEUS-STANDARD-IP"
+   ],
+   "domains":[ 
+      "AA419-ORG-1D-DOMAINS",
+      "AA419-ORG-30D",
+      "AA419-ORG-LATEST-DOMAINS",
+      "COINBLOCKER-7D-DOMAINS",
+      "COINBLOCKER-LATEST-DOMAINS",
+      "DEA",
+      "EAL-DOMAINS",
+      "ETHERSCAMDB-DOMAINS",
+      "ISC-DOMAINS-HIGH",
+      "ISC-DOMAINS-MEDIUM",
+      "IVOLO-DED",
+      "LISINGE-DED",
+      "MALWAREDOMAINS-COM",
+      "MARTENSON-DED",
+      "METAMASK-DOMAINS",
+      "RANSOMWARE-ABUSE-CH",
+      "SBLACK-HOSTS-DOMAINS",
+      "SQUIDBLACKLIST-MALICIOUS-DOMAINS"
+   ]
+}
+```
+
+This endpoint returns a JSON structure with two lists of strings: the list of active blacklists of IP addresses and the list of active blacklists of domains. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint needs API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/account/blacklists`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | Yes | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | Yes | API Key of the owner.
+
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with an 'ip_address' array of strings and 'domains' array of strings.
+
+## Get the config information.
+
+> Get the config information:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/v2.0/account/config"
+```
+
+>The response can be:
+
+```shell
+{
+    "config": "{}", 
+    "restriction": "None", 
+    "restriction_values": ""
+}
+```
+
+This endpoint returns a JSON structure with three values: a dictionary with internal configuration parameters (if any), the type of access restriction to the API (None, IP or Header) and the values depending on the restriction type (IP addresses or domains). The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint needs API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/v2.0/account/config`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | Yes | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | Yes | API Key of the owner.
+
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with a 'config' dictionary, the 'restriction' string with three possible values: None, IP or Header and the 'restriction_values' with the list of the IP addresses or domains to allow access, depending on the restriction type chosen.
 
 # Objects
 
