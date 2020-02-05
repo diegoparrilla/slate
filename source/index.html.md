@@ -4782,7 +4782,7 @@ This API endpoint does not need API Key.
 
 ### HTTP Request
 
-`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists`
+`GET https://api.apility.net/metadata/<BLACKLIST_TYPE>/lists`
 
 ### Header Parameters
 
@@ -4892,7 +4892,7 @@ This API endpoint does not need API Key.
 
 ### HTTP Request
 
-`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
+`GET https://api.apility.net/metadata/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
 
 ### Header Parameters
 
@@ -4953,7 +4953,7 @@ This API endpoint does not need API Key.
 
 ### HTTP Request
 
-`GET https://api.apility.net/metadada/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
+`GET https://api.apility.net/metadata/<BLACKLIST_TYPE>/lists/<BLACKLIST_ID>`
 
 ### Header Parameters
 
@@ -4972,6 +4972,55 @@ callback | No | Function to invoke when using JSONP model.
 ### Response
 
 The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with an '[blackliststats](#blackliststats)' object.
+
+## Get statistics of the number of IP addresses processed
+
+> Get statistics of the number IP addresses processed:
+
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/metadata/processed/ip"
+```
+
+>The response can be:
+
+```shell
+{ 
+   "last_badip_log":{ 
+      "last_hour":4960,
+      "last_24_hours":289253,
+      "last_7_days":1472441
+   }
+}
+```
+
+This endpoint returns a JSON structure with a the number of IP addresses processed by the engine during the last hour, 24 hours and 7 day. This information is updated once every 60 minutes, so don't expect more than one change in the interval. The request always returns the status code 200 (HTTP OK).
+
+<aside class="success">
+This API endpoint does need an API Key.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/metadata/processed/ip`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner.
+callback | No | Function to invoke when using JSONP model.
+
+
+### Response
+
+The status code of the response is 200 (HTTP OK) if everything was ok, but it will also return a JSON with an '[last_badip_log](#last_badip_log)' object.
+
 
 # Apility API account information
 
@@ -5565,3 +5614,13 @@ Parameter     | Description
 ------------- | -----------
 items | Number of items in the chosen type.
 lists | Number of lists in the chosen type.
+
+## last_badip_log
+
+Number of IP addresses processed in the last hour, 24 hours and 7 days.
+
+Parameter     | Description
+------------- | -----------
+last_hour | An integer with the number of IP addresses processed in the last 60 minutes.
+last_24_hours | An integer with the number of IP addresses processed in the last 24 hours.
+last_7_days | An integer with the number of IP addresses processed in the last 7 days.
