@@ -1183,11 +1183,12 @@ X-Auth-Token | No | API Key of the owner.
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-token | No | API Key of the owner.
+alias | No | If 'True', the service will allow email aliases using the '+' sign. If 'False' then the service will not allow email aliases and will return a 400 - Bad Request error. The default value is 'False', so if no paremeter found the service will assume that email aliases are not allowed.
 callback | No | Function to invoke when using JSONP model.
-timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds.
 quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
 quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds.
+token | No | API Key of the owner.
 
 ### URL Parameters
 
@@ -1397,11 +1398,13 @@ Accept | Yes | application/json
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-token | No | API Key of the owner.
+alias | No | If 'True', the service will allow email aliases using the '+' sign. If 'False' then the service will not allow email aliases and will return a 400 - Bad Request error. The default value is 'False', so if no paremeter found the service will assume that email aliases are not allowed.
 callback | No | Function to invoke when using JSONP model.
-timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds. If the process timesout then the JSON returns True in smtp>timedout.
 quarantine_ip | No | This IP address will be added to the quarantine blacklist of the user if the domain has a negative score.
 quarantine_ttl | No | The TTL in seconds to store the IP address passed in 'quarantine_ip'. If not passed, default TTL is 3600.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds.
+token | No | API Key of the owner.
+
 
 ### URL Parameters
 
@@ -1649,9 +1652,10 @@ Accept | No | application/json
 
 Parameter    | Mandatory | Description
 ------------ | --------- | -----------
-token | No | API Key of the owner.
-timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds. If the process timesout then the JSON returns True in smtp>timedout.
+alias | No | If 'True', the service will allow email aliases using the '+' sign. If 'False' then the service will not allow email aliases and will return a 400 - Bad Request error. The default value is 'False', so if no paremeter found the service will assume that email aliases are not allowed.
 callback | No | Function to invoke when using JSONP model.
+timeout | No | Number of seconds before the process give up testing the email server. If timeout is 0, then the email server testing is fully ignored. If timeout is not passed in the query string or negative the default timeout is 20 seconds. If the timeout is greater than 60 seconds the value is ignored and the timeout is set to 60 seconds.
+token | No | API Key of the owner.
 
 ### URL Parameters
 
