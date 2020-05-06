@@ -2938,12 +2938,13 @@ The maximum number of AS numbers to resolve per bulk request is 1000. The servic
 # Quarantined Objects
 
 [Apility.io](https://apility.io) adds every few weeks new lists from multiple sources with the intention of helping our users to keep away those who want to abuse the services of our clients.
-However, it may be the case that our customers want to create their own blacklists based on individual parameters or business logic. This is why a new capability has been implemented to create private exclusion lists based on user IP properties. The properties we can control are the following:
+However, it may be the case that our customers want to create their own blacklists based on individual parameters or business logic. This is why a new capability has been implemented to create private exclusion lists based on user IP address properties and domains. The properties we can control are the following:
 
 * IP address [QUARANTINE-IP](https://apility.io/list?id=QUARANTINE-IP&type=badip)
 * Country [QUARANTINE-COUNTRY](https://apility.io/list?id=QUARANTINE-COUNTRY&type=badip)
 * Continent [QUARANTINE-CONTINENT](https://apility.io/list?id=QUARANTINE-CONTINENT&type=badip)
 * Autonomous System [QUARANTINE-AS](https://apility.io/list?id=QUARANTINE-AS&type=badip)
+* Domain [QUARANTINE-DOMAIN](https://apility.io/list?id=QUARANTINE-DOMAIN&type=baddomain)
 
 
 For each type of object it's possible to perform four different actions:
@@ -2953,9 +2954,9 @@ For each type of object it's possible to perform four different actions:
 * check if the object is in the list or
 * get all the elements in the list.
 
-As part of the attributes of the object, the Time To Live of the object in the black list is the most important. The TTL or Time to Live is the number of seconds the object will be in the black list before expiring and disappearing. Hence, it's possible to temporaly ban an IP address or set of IP addreses based on some attributes: for example ban the IP address coming from a toxic Autonomous System. Due to this time-based ban this kind of blacklists are referred as QUARANTINED objects.
+As part of the attributes of the object, the Time To Live of the object in the black list is the most important. The TTL or Time to Live is the number of seconds the object will be in the black list before expiring and disappearing. Hence, it's possible to temporaly ban a Domain, an IP address or set of IP addreses based on some attributes: for example ban the IP address coming from a toxic Autonomous System. Due to this time-based ban this kind of blacklists are referred as QUARANTINED objects.
 
-Finally, to check if the IP belongs to any of these lists it's as simple as using the [IP Check](#ip-check) services of the API. If the IP matches some of the attributes, then the QUARANTINED blacklist will be shown just like the rest of the public blacklist.
+Finally, to check if the IP, Domain belongs to any of these lists it's as simple as using the [IP Check](#ip-check), [Domain Check](#domain-check), [Email Check](#email-check) services of the API. If the IP or Domain matches some of the attributes, then the QUARANTINED blacklist will be shown just like the rest of the public blacklist.
 
 
 ## Add an IP to the private QUARANTINE-IP blacklist
@@ -2986,7 +2987,7 @@ This endpoint add the IP address passed as argument in the body to the QUARANTIN
 - If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3054,7 +3055,7 @@ The service will automatically obtain the country of the IP using the Geo locati
 
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3122,7 +3123,7 @@ The service will automatically obtain the continent of the IP using the Geo loca
 
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3190,7 +3191,7 @@ The service will automatically obtain the AS number of the IP using the AS resol
 
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3225,6 +3226,73 @@ ttl | Yes | Time to Live in seconds of the AS in the blacklist. Zero for never e
 The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS has been added succesfully to the QUARANTINE-AS blacklist. Any other error message means that the AS could not be added:
 
 * __HTTP/1.1 400 Bad Request__: The JSON object, AS number and/or the TTL are malformed, the AS cannot be stored. Check the response text for more information about the error.
+
+## Add a Domain to the private QUARANTINE-DOMAIN blacklist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X POST -d'{"domain":<DOMAIN_NAME>,"ttl":<TTL>}' "https://api.apility.net/quarantine/domain"
+```
+
+>If the operation can be performed then the result is:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:01:31 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+200: OK
+```
+
+
+This endpoint adds the Domain name passed as argument in the body to the QUARANTINE-DOMAIN private blacklist. The TTL must be passed too and it permits two options:
+
+- If TTL is 0, then the object will never expire and can only be removed using the remove request of the API or from the user dashboard.
+- If TTL is greater than 0 then the object will expire after the number of seconds in TTL.
+
+The service will automatically check if the Domain name is in the QUARANTINE-DOMAIN blacklist. Use the [Domain Check](#domain-check) and [Email Check](#email-check) services.
+
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`POST https://api.apility.net/quarantine/domain`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+### JSON body
+
+The body must have a valid JSON object composed of two parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+domain | Yes | The domain name to add to the QUARANTINE-DOMAIN blacklist.
+ttl | Yes | Time to Live in seconds of the Domain name in the blacklist. Zero for never expiring.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Domain has been added succesfully to the QUARANTINE-DOMAIN blacklist. Any other error message means that the Domain could not be added:
+
+* __HTTP/1.1 400 Bad Request__: The JSON object, Domain name and/or the TTL are malformed, the Domain name cannot be stored. Check the response text for more information about the error.
 
 
 ## Check if the IP is in the private QUARANTINE-IP blacklist
@@ -3261,7 +3329,7 @@ content-length: 14
 This endpoint check if the IP address passed as argument in the query string is in the QUARANTINE-IP private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3324,7 +3392,7 @@ content-length: 14
 This endpoint checks if the Country code passed as argument in the query string is in the QUARANTINE-COUNTRY private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3387,7 +3455,7 @@ content-length: 14
 This endpoint checks if the Continent code passed as argument in the query string is in the QUARANTINE-CONTINENT private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3450,7 +3518,7 @@ content-length: 14
 This endpoint checks if the AS Number passed as argument in the query string is in the QUARANTINE-AS private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the IP address including public blacklists you should better use the [IP Check](#ip-check) API services.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3477,6 +3545,68 @@ AS_NUM | Yes | Autonmous System Number (ASN) to check if it is in the QUARANTINE
 The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the AS is in the QUARANTINE-AS blacklist. A HTTP/1.1 404 Not Found means that the AS is not in the QUARANTINE-AS blacklist. Any other error message means that the AS number could not be parsed:
 
 * __HTTP/1.1 400 Bad Request__: The AS number (ASN) is malformed. Check the response text for more information about the error.
+
+## Check if the Domain is in the private QUARANTINE-DOMAIN blacklist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/domain/<DOMAIN_NAME>"
+```
+
+>If the Domain name is in the list:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:19:39 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+>If the Domain is NOT the list:
+
+```shell
+HTTP/2 404
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:20:26 GMT
+content-type: text/plain; charset=utf-8
+content-length: 14
+
+```
+
+This endpoint check if the Domain name passed as argument in the query string is in the QUARANTINE-DOMAIN private blacklist. If exists, it returns a HTTP 200 OK, and if not, a HTTP 404 Not Found error. If you want to perform a full test on the Domain name including public blacklists you should better use the [Domain Check](#domain-check) API services.
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/domain/<DOMAIN_NAME>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+Domain | Yes | Domain name to check if it is in the QUARANTINE-DOMAIN
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the Domain name is in the QUARANTINE-DOMAIN blacklist. A HTTP/1.1 404 Not Found means that the Domain name is not in the QUARANTINE-DOMAIN blacklist. Any other error message means that the Domain name could not be parsed:
+
+* __HTTP/1.1 400 Bad Request__: The Domain name is malformed. Check the response text for more information about the error.
 
 
 ## Get full list of IP addresses in the private QUARANTINE-IP blacklist
@@ -3509,7 +3639,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/ip"
 This endpoint returns the full list of the IP addresses and the corresponding TTL in the QUARANTINE-IP private blacklist as a JSON object.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3572,7 +3702,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/countr
 This endpoint returns the full list of the Country codes and the corresponding TTL in the QUARANTINE-COUNTRY private blacklist as a JSON object.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3631,7 +3761,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/contin
 This endpoint returns the full list of the Continent codes and the corresponding TTL in the QUARANTINE-CONTINENT private blacklist as a JSON object.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3689,7 +3819,7 @@ $ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/as"
 This endpoint returns the full list of the AS Numbers and the corresponding TTL in the QUARANTINE-AS private blacklist as a JSON object.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3720,7 +3850,66 @@ Parameter     | Description
 ------------- | -----------
 quarantined | List containing the pair of AS Numbers and TTL.
 
+## Get full list of Domains in the private QUARANTINE-DOMAIN blacklist
 
+```shell
+$ curl -H "X-Auth-Token: UUID" -X GET "https://api.apility.net/quarantine/domain"
+```
+
+>The response will always return a JSON object, even when there is no elements in the list:
+
+```shell
+{
+   "quarantined":[
+      {
+         "domain":"domain-test1.com",
+         "ttl":785
+      },
+      {
+         "domain":"domain-test2.com",
+         "ttl":3715
+      },
+      {
+         "domain":"domain-test3.com",
+         "ttl":4572
+      }
+   ]
+}
+```
+
+This endpoint returns the full list of the Domains and the corresponding TTL in the QUARANTINE-DOMAIN private blacklist as a JSON object.
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`GET https://api.apility.net/quarantine/domain`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+
+
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+The JSON response is composed of:
+
+Parameter     | Description
+------------- | -----------
+quarantined | List containing the pair of Domain names and TTL.
 
 
 ## Delete an IP address if it is in the private QUARANTINE-IP blacklist
@@ -3746,7 +3935,7 @@ x-content-type-options: nosniff
 This endpoint delete the IP address passed as argument in the query string if it exists in the QUARANTINE-IP private blacklist. This API call will delete the IP address no matter if it will expire or not.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3798,7 +3987,7 @@ x-content-type-options: nosniff
 This endpoint delete the Country code passed as argument in the query string if it exists in the QUARANTINE-COUNTRY private blacklist. This API call will delete the Country code no matter if it will expire or not.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3851,7 +4040,7 @@ x-content-type-options: nosniff
 This endpoint delete the Continent code passed as argument in the query string if it exists in the QUARANTINE-CONTINENT private blacklist. This API call will delete the Continent code no matter if it will expire or not.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3903,7 +4092,7 @@ x-content-type-options: nosniff
 This endpoint delete the AS passed as argument in the query string if it exists in the QUARANTINE-AS private blacklist. This API call will delete the AS no matter if it will expire or not.
 
 <aside class="success">
-This is a paid plan feature only. You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
 </aside>
 
 ### HTTP Request
@@ -3931,8 +4120,56 @@ The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that 
 
 * __HTTP/1.1 400 Bad Request__: The AS Number is malformed. Check the response text for more information about the error.
 
+## Delete a Domain name if it is in the private QUARANTINE-DOMAIN blacklist
+
+```shell
+$ curl -i -H "X-Auth-Token: UUID" -X DELETE "https://api.apility.net/quarantine/domain/<DOMAIN_NAME>"
+```
+
+>The response will always be HTTP 200 OK no matter if the Domain to delete exists or not:
+
+```shell
+HTTP/2 200
+server: nginx/1.10.3 (Ubuntu)
+date: Mon, 29 Jan 2018 17:45:14 GMT
+content-type: text/plain; charset=utf-8
+content-length: 7
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: DENY
+x-content-type-options: nosniff
+
+```
+
+This endpoint delete the Domain name passed as argument in the query string if it exists in the QUARANTINE-DOMAIN private blacklist. This API call will delete the Domain name no matter if it will expire or not.
+
+<aside class="success">
+You always have to pass the API key. You can pass it as a header parameter or a query string parameter.
+</aside>
+
+### HTTP Request
+
+`DELETE https://api.apility.net/quarantine/domain/<DOMAIN_NAME>`
+
+### Header Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+X-Auth-Token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+
+### QueryString Parameters
+
+Parameter    | Mandatory | Description
+------------ | --------- | -----------
+token | No | API Key of the owner. You can choose to pass the API Key in the header or in the Query String.
+callback | Yes | Function to invoke when using JSONP model.
+Domain | Yes | Domain name to remove from the QUARANTINE-DOMAIN blacklist
 
 
+### Response
+
+The response should be a __HTTP/1.1 200 OK__ if everything is ok and means that the operation was performed succesufully. Any other error should be considered a platform problem and you can report it to our suppor team.
+
+* __HTTP/1.1 400 Bad Request__: The Domain name is malformed. Check the response text for more information about the error.
 
 ## Add an IP address automatically to QUARANTINE-IP blacklist if a domain or an email has a negative score
 
